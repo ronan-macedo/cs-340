@@ -1,6 +1,140 @@
-/******* Change Box Model ***************/
+/* Box Model */
 *,
 *:before,
 *:after {
   box-sizing: border-box;
+}
+
+/* Default Settings */
+
+:root {
+  --dark-blue: #34568b;
+  /* Set default dark blue color */
+  --light-blue: #b5c7e3;
+  /* Set default light blue color */
+  --blue: #4775d1;
+  /* Set default blue color */
+  --dark-grey: #4b4d4e;
+  /* Set default dark grey color */
+  --black: #252727;
+  /* Set default black color */
+  --white: #ffffff;
+  /* Set default white color */
+}
+
+html {
+  font-family: 'Merriweather', serif;
+  color: var(--black);
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-size: .8rem;
+}
+
+.container {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Header Styles */
+
+.top-header {
+  overflow: hidden;
+  padding: 1.25rem .625rem;
+}
+
+.top-header a {
+  text-decoration: none;
+  color: var(--black);
+}
+
+.top-header a:hover {
+  color: var(--blue);
+}
+
+.logo {
+  float: left;
+  display: flex;
+  flex-direction: row;
+}
+
+.logo img {
+  display: block;
+  height: 1.875rem;
+}
+
+.logo .site-name {
+  display: block;
+  margin-left: .5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#tools {
+  float: right;
+}
+
+/* Navigation Styles */
+
+.nav-bar {
+  overflow-x: auto;
+  background-color: var(--dark-grey);
+  white-space: nowrap;
+  width: 100%;
+}
+
+.nav-bar a {
+  text-decoration: none;
+  color: var(--white);
+}
+
+.nav-bar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-bar li {
+  padding: .625rem .625rem;
+}
+
+.nav-bar li:hover {
+  background-color: var(--blue);
+}
+
+/* Footer Styles */
+
+.bottom-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  background-color: var(--dark-grey);
+  color: var(--white);
+  text-align: center;
+  padding: .5rem;
+}
+
+@media screen and (min-width: 48rem) {
+  /* Default Settings */
+
+  html {
+    font-size: 1.25rem;
+  }
+
+  body {
+    background-image: url(/images/site/small_check.jpg);
+  }
+
+  .container {
+    margin: 1rem auto 1rem auto;
+    border: .5rem solid var(--dark-blue);
+    border-radius: .25rem;
+    max-width: 90vw;
+    background-color: var(--white);
+  }
 }
