@@ -14,3 +14,9 @@ node_modules
 
 # .DS_Store is only for Mac users
 **/.DS_Store
+
+# created automatically when use the command 'pnpm install'
+pnpm-lock.yaml
+
+# remove vscode local settings
+.vscode
