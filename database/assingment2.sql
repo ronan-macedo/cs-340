@@ -26,12 +26,12 @@ set inv_description = replace(
         'a huge interior'
     )
 where inv_id = 10;
--- Select vehicles from inventory that belongs to 'Sport' category
+-- Select vehicles from `inventory` that belongs to 'Sport' category
 select *
 from public.inventory i
     inner join public.classification c on i.classification_id = c.classification_id
 where c.classification_name = 'Sport';
--- Update inventory inv_image and inv_thumbnail
+-- Update `inventory` inv_image and inv_thumbnail
 update public.inventory
 set inv_image = replace(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = replace(inv_thumbnail, '/images/', '/images/vehicles/');
