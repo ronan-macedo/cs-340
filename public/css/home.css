@@ -27,8 +27,7 @@
     font-weight: bold;
 }
 
-.hero-caption ul {
-    list-style-type: none;
+.hero-caption ul {    
     margin: 0;
     padding: 0;
 }
@@ -43,8 +42,7 @@
     margin-bottom: .625rem;
 }
 
-.upgrades a {
-    text-decoration: none;
+.upgrades a {    
     color: var(--dark-blue);
 }
 
