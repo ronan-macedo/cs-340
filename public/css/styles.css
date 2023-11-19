@@ -20,8 +20,10 @@
   /* Set default black color */
   --white: #ffffff;
   /* Set default white color */
-  --error: #db2525;  
+  --std-red: #ab1c1c;
   /* Set default red color */
+  --std-green: #07642e;
+  /* Set default green color */
 }
 
 html {
@@ -38,6 +40,7 @@ body {
 .container {
   position: relative;
   max-width: 100%;
+  min-height: 80vh;
   overflow: hidden;
 }
 
@@ -47,6 +50,33 @@ a {
 
 ul {
   list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.primary-button {
+  border-radius: .25rem;
+  padding: .35rem;
+  background-color: var(--dark-blue);
+  font-size: 1rem;
+  width: 100%;
+  text-align: center;
+}
+
+.primary-button:hover {
+  cursor: pointer;
+  color: var(--dark-grey);
+  background-color: var(--light-blue);
+}
+
+.primary-button:hover * {
+  cursor: pointer;
+  color: var(--dark-grey);
+  background-color: var(--light-blue);
+}
+
+.primary-button a {
+  color: var(--white);
 }
 
 /* Header Styles */
@@ -146,8 +176,16 @@ ul {
   font-size: 2rem;
 }
 
-.error {
-  color: var(--error);
+.notice {
+  color: var(--std-red);
+  margin: 0 0 1.25rem 0;
+  padding: 0;
+}
+
+.success {
+  color: var(--std-green);
+  margin: 0 0 1.25rem 0;
+  padding: 0;
 }
 
 .error-hero {
@@ -157,32 +195,6 @@ ul {
 .error-hero img {
   display: block;
   max-width: 100%;
-}
-
-.error-caption {
-  border: .05rem solid var(--dark-blue);
-  border-radius: .25rem;
-  padding: .3rem .1rem .3rem .1rem;
-  background-color: var(--blue);
-  font-size: 1.25rem;
-  max-width: 10rem;
-  text-align: center;
-}
-
-.error-caption:hover {
-  cursor: pointer;
-  color: var(--dark-blue);
-  background-color: var(--light-blue);
-}
-
-.error-caption:hover * {
-  cursor: pointer;
-  color: var(--dark-blue);
-  background-color: var(--light-blue);
-}
-
-.error-caption a {
-  color: var(--white);
 }
 
 @media screen and (min-width: 48rem) {
@@ -204,19 +216,19 @@ ul {
     background-color: var(--white);
   }
 
+  .primary-button {
+    font-size: .85rem;
+    max-width: 7rem;
+  }
+
   /* Footer Styles */
   .bottom-footer {
     position: absolute;
-    bottom: 0;    
+    bottom: 0;
   }
 
   /* Not Found View Styles */
   .error-hero {
     max-width: 30rem;
-  }
-
-  .error-caption {
-    font-size: .9rem;
-    max-width: 7rem;
   }
 }

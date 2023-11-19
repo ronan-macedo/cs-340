@@ -1,0 +1,23 @@
+<div class="inv-container">
+    <h1>Add Classification</h1>
+    <%- messages() %>
+    <% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error=> { %>
+        <li>
+            <%= error.msg %>
+        </li>
+        <% }) %>
+    </ul>
+    <% } %>
+    <div class="inv-form">
+        <form action="/inv/add-classification" method="post">
+            <label for="classification_name"><b>Classification*</b></label><br>
+            <input type="text" name="classification_name" id="classification_name" pattern=".{2,}"
+                placeholder="Enter classification here" value="<%= locals.classification_name %>" required><br>
+            <br>
+            <input title="Click to add classification" type="submit" value="Add Classification">
+        </form>
+    </div>
+    <p><a title="Click to back to vehicle management" href="/inv/management">Back to Vehicle Management</a></p>
+</div>

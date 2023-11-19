@@ -1,0 +1,163 @@
+.account-container {
+    padding: 1.25rem .625rem;
+    margin-bottom: 2rem;
+}
+
+.account-container a {
+    color: var(--dark-blue);
+}
+
+.account-container a:hover {
+    color: var(--light-blue);
+}
+
+input[type=text],
+input[type=password],
+input[type=submit],
+input[type=email] {
+    border-radius: .25rem;
+    padding: .35rem;
+    width: 100%;
+}
+
+input[type=text],
+input[type=password],
+input[type=email] {
+    border: .05rem solid var(--dark-blue);
+    margin-top: .25rem;
+    margin-bottom: .5rem;
+}
+
+input[type=submit] {
+    background-color: var(--dark-blue);
+    border: transparent;
+    color: var(--white);
+    font-size: 1rem;
+}
+
+input[type=submit]:hover {
+    cursor: pointer;
+    color: var(--dark-grey);
+    background-color: var(--light-blue);
+}
+
+input:required:invalid {
+    color: var(--std-red);
+}
+
+.switch {
+    position: relative;
+    display: block;
+    width: 2.75rem;
+    height: 1.5rem;
+    text-indent: -6.1875rem;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--light-blue);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1.05rem;
+    width: 1.05rem;
+    left: 0.25rem;
+    bottom: 0.25rem;
+    background-color: var(--white);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: var(--dark-blue);
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 0.0625rem var(--dark-blue);
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(1.25rem);
+    -ms-transform: translateX(1.25rem);
+    transform: translateX(1.25rem);
+}
+
+.slider.round {
+    border-radius: 2.125rem;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.switch-label {
+    margin-left: .5rem;
+}
+
+.show-password {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.valid {
+    color: var(--std-green);
+    margin-left: .5rem;
+}
+
+.invalid {
+    color: var(--std-red);
+    margin-left: .5rem;
+}
+
+#passwordValidator {
+    display: none;
+    border-radius: .25rem;
+    margin-top: .75rem;
+    margin-bottom: .05rem;
+}
+
+.invalid:before {
+    position: relative;
+    left: -.5rem;
+    content: "✖";
+}
+
+.valid:before {
+    position: relative;
+    left: -.5rem;
+    content: "✔";
+}
+
+@media screen and (min-width: 48rem) {
+
+    .account-container {
+        font-size: .75rem;
+    }
+
+    input[type=text],
+    input[type=password],
+    input[type=email] {
+        width: 14rem;
+    }
+
+    input[type=submit] {
+        font-size: .85rem;
+        max-width: 7rem;
+    }
+}
