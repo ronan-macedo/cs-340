@@ -1,10 +1,10 @@
 const invModel = require("../models/inventory-model");
-const Util = {};
+const util = {};
 
-/* ************************
- * Constructs the nav HTML unordered list
- ************************** */
-Util.getNav = async (req, res, next) => {
+/**
+ * Constructs the nav HTML unordered list 
+ */
+util.getNav = async (req, res, next) => {
     let data = await invModel.getClassifications();
     let list = "<ul>";
     list += '<li><a href="/" title="Home page">Home</a></li>';
@@ -24,10 +24,10 @@ Util.getNav = async (req, res, next) => {
     return list;
 }
 
-/* **************************************
-* Build the classification view HTML
-* ************************************ */
-Util.buildClassificationGrid = async (data) => {
+/**
+ * Build the classification view HTML 
+ */
+util.buildClassificationGrid = async (data) => {
     let grid;
     if (data.length > 0) {
         grid = '<ul class="inv-display">';
@@ -51,12 +51,15 @@ Util.buildClassificationGrid = async (data) => {
         });
         grid += '</ul>';
     } else {
-        grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>';
+        grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>';
     }
     return grid;
 }
 
-Util.buildVehicleDetails = async (data) => {
+/**
+ * Build the vehicle datail view HTML 
+ */
+util.buildVehicleDetails = async (data) => {
     let details = '<div class="vehicle-details">';
     if (data) {
         details += '<h1 class="detail-title">' + data.inv_make + ' ' + data.inv_model + '</h1>';
@@ -65,7 +68,7 @@ Util.buildVehicleDetails = async (data) => {
             + data.inv_make + ' ' + data.inv_model
             + ' on CSE Motors">';
         details += '</div>';
-        details += '<div class="vehicle-info">';        
+        details += '<div class="vehicle-info">';
         details += '<span>Description:</span>'
         details += '<p>' + data.inv_description + '</p>'
         details += '<span>Year:</span>'
@@ -85,11 +88,29 @@ Util.buildVehicleDetails = async (data) => {
     return details
 }
 
+/**
+ * Build classifications form select 
+ */
+util.buildSelectClassification = async () => {
+    let data = await invModel.getClassifications();
+    let select = '<label for="classification_id"><b>Classification*</b></label><br>';
+    select += '<select id="classification_id" name="classification_id">';
+    data.rows.forEach((row) => {
+        select += '<option value="' +
+            row.classification_id +
+            '">' +
+            row.classification_name +
+            '</option>';
+    });
+    select += '</select><br>';
+    return select;
+}
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
  * General Error Handling
  **************************************** */
-Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
-module.exports = Util;
+module.exports = util;

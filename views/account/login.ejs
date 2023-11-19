@@ -1,0 +1,33 @@
+<div class="account-container">
+    <h1>Login</h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <%  }) %>
+        </ul>
+    <% } %>
+    <div class="account-form">
+        <form action="/account/login" method="post">
+            <label for="account_email"><b>User Email</b></label><br>
+            <input type="email" name="account_email" id="account_email" placeholder="Enter your email here" required><br>
+            <label for="account_password"><b>Password</b></label><br>
+            <input type="password" name="account_password" id="account_password"
+                pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{12,}"
+                placeholder="Enter your password here"
+                required><br>
+            <div class="show-password">
+                <label class="switch">
+                    toggle
+                    <input type="checkbox" onclick="showPassword()">
+                    <span class="slider round"></span>
+                </label>
+                <span class="switch-label">Show Password</span>
+            </div>
+            <br>
+            <input title="Click to login" type="submit" value="Login">
+        </form>
+    </div>
+    <p>Not yet registered? <a title="Click to register" href="/account/register">Register</a></p>
+</div>

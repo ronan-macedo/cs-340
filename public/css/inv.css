@@ -5,6 +5,14 @@
     margin-bottom: 1.5rem;
 }
 
+.inv-container a {
+    color: var(--dark-blue);
+}
+
+.inv-container a:hover {
+    color: var(--light-blue);
+}
+
 .inv-display a {
     color: var(--dark-blue);
 }
@@ -73,7 +81,51 @@
     background-color: var(--light-blue);
 }
 
+.inv-form input[type=text],
+.inv-form input[type=number],
+.inv-form input[type=submit],
+.inv-form textarea,
+.inv-form select {
+    border-radius: .25rem;
+    padding: .35rem;
+    width: 100%;
+}
+
+.inv-form input[type=text],
+.inv-form input[type=number],
+.inv-form textarea,
+.inv-form select {
+    border: .05rem solid var(--dark-blue);
+    margin-top: .25rem;
+    margin-bottom: .5rem;
+}
+
+.inv-form textarea {
+    height: 10rem;
+}
+
+.inv-form input[type=submit] {
+    background-color: var(--dark-blue);
+    border: transparent;
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.inv-form input[type=submit]:hover {
+    cursor: pointer;
+    color: var(--dark-grey);
+    background-color: var(--light-blue);
+}
+
+.inv-form input:required:invalid {
+    color: var(--std-red);
+}
+
 @media screen and (min-width: 48rem) {
+
+    .inv-container {
+        font-size: .75rem;
+    }
 
     /* Classification View Styles */
 
@@ -112,5 +164,17 @@
         grid-template-areas:
             'detail-title detail-title'
             'vehicle-hero vehicle-info';
+    }
+
+    .inv-form input[type=text],
+    .inv-form input[type=number],
+    .inv-form textarea,
+    .inv-form select {
+        width: 14rem;
+    }    
+
+    .inv-form input[type=submit] {
+        font-size: .85rem;
+        max-width: 8rem;
     }
 }

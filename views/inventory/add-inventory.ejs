@@ -1,0 +1,49 @@
+<div class="inv-container">
+    <h1>Add Vehicle</h1>
+    <%- messages() %>
+    <% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error=> { %>
+            <li>
+                <%= error.msg %>
+            </li>
+            <% }) %>
+    </ul>
+    <% } %>
+    <div class="inv-form">
+        <form action="/inv/add-inventory" method="post">
+            <label for="inv_make"><b>Manufacturer*</b></label><br>
+            <input type="text" name="inv_make" id="inv_make" placeholder="Enter manufacturer here" pattern=".{2,}"
+                value="<%= locals.inv_make %>" required><br>
+            <label for="inv_model"><b>Model*</b></label><br>
+            <input type="text" name="inv_model" id="inv_model" placeholder="Enter model here" pattern=".{2,}"
+                value="<%= locals.inv_model %>" required><br>
+            <label for="inv_year"><b>Year*</b></label><br>
+            <input type="number" name="inv_year" id="inv_year" placeholder="Enter year here"
+                value="<%= locals.inv_year %>" pattern="^(189[0-9]|19[0-9][0-9]|2[0-9]{3})$" required><br>
+            <label for="inv_description"><b>Description*</b></label><br>
+            <textarea name="inv_description" id="inv_description"><%= locals.inv_description %></textarea><br>
+            <label for="inv_image"><b>Image*</b></label><br>
+            <input type="text" name="inv_image" id="inv_image" placeholder="Enter image path here" pattern=".{2,}"
+                value="/images/vehicles/no-image.png" required><br>
+            <label for="inv_thumbnail"><b>Thumbnail*</b></label><br>
+            <input type="text" name="inv_thumbnail" id="inv_thumbnail" placeholder="Enter thumbnail path here"
+                pattern=".{2,}" value="/images/vehicles/no-image-tn.png"
+                required><br>
+            <label for="inv_price"><b>Price*</b></label><br>
+            <input type="number" name="inv_price" id="inv_price" placeholder="Enter price here" step="0.01" min="0"
+                value="<%= locals.inv_price %>" lang="en-US" required><br>
+            <label for="inv_miles"><b>Miles*</b></label><br>
+            <input type="number" name="inv_miles" id="inv_miles" placeholder="Enter miles here" step="0.01" min="0"
+                value="<%= locals.inv_miles %>" lang="en-US" required><br>
+            <label for="inv_color"><b>Color*</b></label><br>
+            <input type="text" name="inv_color" id="inv_color" placeholder="Enter color here" pattern=".{2,}"
+                value="<%= locals.inv_color %>" required><br>
+            <%- selectClassification %>
+                <br>
+                <input title="Click to add vehicle" type="submit" value="Add Vehicle">
+        </form>
+    </div>
+    <p><a title="Click to back to vehicle management" href="/inv/management">Back to Vehicle Management</a>
+    </p>
+</div>
