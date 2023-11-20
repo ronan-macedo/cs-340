@@ -14,8 +14,9 @@ invCont.buildByClassificationId = async (req, res, next) => {
     const grid = await utilities.buildClassificationGrid(data);
     let nav = await utilities.getNav();
     const className = await invModel.getClassificationName(classification_id);
+    let title = className + " vehicles"
     res.render("./inventory/classification", {
-        title: className + " vehicles",
+        title: title,
         nav,
         grid,
         pagecss: invcss,
@@ -27,12 +28,13 @@ invCont.buildByClassificationId = async (req, res, next) => {
  */
 invCont.buildByInvId = async (req, res, next) => {
     const inv_id = req.params.invId;
-    const data = await invModel.getVehicleByInvId(inv_id);
+    const data = await invModel.getInventoryByInvId(inv_id);
     const details = await utilities.buildVehicleDetails(data);
     let nav = await utilities.getNav();
     const vehicleName = data.inv_make + ' ' + data.inv_model;
+    let title = vehicleName + " Details"
     res.render("./inventory/details", {
-        title: vehicleName + " Details",
+        title: title,
         nav,
         details,
         pagecss: invcss,
@@ -69,7 +71,7 @@ invCont.buildaddClassification = async (req, res, next) => {
  */
 invCont.buildAddInventory = async (req, res, next) => {
     let nav = await utilities.getNav();
-    let select = await utilities.buildSelectClassification();
+    let select = await utilities.buildSelectClassification(null);
     res.render("./inventory/add-inventory", {
         title: "Add Inventory",
         nav,
@@ -95,7 +97,6 @@ invCont.addClassification = async (req, res) => {
             title: "Management",
             nav,
             pagecss: invcss,
-            errors: null,
         });
     } else {
         req.flash("notice", "Sorry, add classification failed.")
@@ -110,7 +111,7 @@ invCont.addClassification = async (req, res) => {
 
 invCont.addInventory = async (req, res) => {
     let nav = await utilities.getNav();
-    let select = await utilities.buildSelectClassification();
+    let select = await utilities.buildSelectClassification(null);
 
     const {
         inv_make,
@@ -147,7 +148,6 @@ invCont.addInventory = async (req, res) => {
             nav,
             pagecss: invcss,
             errors: null,
-            selectClassification: select,
         });
     } else {
         req.flash("notice", "Sorry, add inventory failed.")

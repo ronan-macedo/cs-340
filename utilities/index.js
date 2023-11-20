@@ -80,6 +80,11 @@ util.buildVehicleDetails = async (data) => {
         details += '<span>Price:</span>'
         details += '<p>$ ' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</p>'
         details += '</div>';
+        details += '<ul>';
+        details += `<li><p><a href="/inv/type/${data.classification_id}" title="See our inventory of ${data.classification_name} vehicles">
+            Back to ${data.classification_name} vehicles
+            </a></p></li>`;
+        details += '</ul>'
         details += '</div>';
     } else {
         details += '<p class="notice">Sorry, no vehicle details found.</p>';
@@ -91,16 +96,14 @@ util.buildVehicleDetails = async (data) => {
 /**
  * Build classifications form select 
  */
-util.buildSelectClassification = async () => {
+util.buildSelectClassification = async (classificationId) => {
     let data = await invModel.getClassifications();
     let select = '<label for="classification_id"><b>Classification*</b></label><br>';
     select += '<select id="classification_id" name="classification_id">';
     data.rows.forEach((row) => {
-        select += '<option value="' +
-            row.classification_id +
-            '">' +
-            row.classification_name +
-            '</option>';
+        select += '<option value="' + row.classification_id + '"';
+        select += parseInt(classificationId) === row.classification_id ? " selected" : "";
+        select += '>' + row.classification_name + '</option>';
     });
     select += '</select><br>';
     return select;

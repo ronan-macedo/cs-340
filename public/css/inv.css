@@ -58,6 +58,10 @@
     max-width: 90%;
 }
 
+.vehicle-details li {
+    font-size: .9rem;
+}
+
 .vehicle-hero {
     width: 100%;
 }

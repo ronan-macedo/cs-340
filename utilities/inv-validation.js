@@ -3,6 +3,9 @@ const { body, validationResult } = require("express-validator");
 const invModel = require("../models/inventory-model");
 const validate = {};
 
+/**
+ * Classification validation rules 
+ */
 validate.classificationRules = () => {
     return [
         body("classification_name")
@@ -19,61 +22,73 @@ validate.classificationRules = () => {
     ];
 }
 
+/**
+ * Inventory validation rules 
+ */
 validate.inventoryRules = () => {
     return [
         body("inv_make")
             .trim()
             .isLength({ min: 1 })
-            .notEmpty()
             .withMessage("Please provide a manufactorer name."),
 
         body("inv_model")
             .trim()
             .isLength({ min: 1 })
-            .notEmpty()
             .withMessage("Please provide a model name."),
 
         body("inv_year")
-            .notEmpty()
-            .withMessage("Please provide a year."),
+            .trim()
+            .isNumeric()
+            .withMessage("Please provide a year.")
+            .custom((inv_year) => {
+                let year = parseInt(inv_year);
+                if (year < 1870 || year > 2999) {
+                    throw new Error("Year should be between 1870 or more. Please choose other year.");
+                }
+            }),
 
         body("inv_description")
             .trim()
-            .notEmpty()
+            .isLength({ min: 2 })
             .withMessage("Please provide a description."),
 
         body("inv_image")
             .trim()
             .isLength({ min: 1 })
-            .notEmpty()
             .withMessage("Please provide a image path."),
 
         body("inv_thumbnail")
             .trim()
             .isLength({ min: 1 })
-            .notEmpty()
             .withMessage("Please provide a thumbnail path."),
 
         body("inv_price")
-            .notEmpty()
+            .trim()
+            .isNumeric()
             .withMessage("Please provide a price."),
 
         body("inv_miles")
-            .notEmpty()
+            .trim()
+            .isNumeric()
             .withMessage("Please provide miles."),
 
         body("inv_color")
             .trim()
             .isLength({ min: 1 })
-            .notEmpty()
             .withMessage("Please provide a color name."),
 
         body("classification_id")
-            .notEmpty()
+            .trim()
+            .isLength({ min: 1 })
+            .isNumeric()
             .withMessage("Please provide a classification."),
     ];
 }
 
+/**
+ * Check data and return errors or continue to add classification
+ */
 validate.checkClassificationData = async (req, res, next) => {
     const { classification_name } = req.body;
     let errors = [];
@@ -92,6 +107,9 @@ validate.checkClassificationData = async (req, res, next) => {
     next();
 }
 
+/**
+ * Check data and return errors or continue to add inventory
+ */
 validate.checkInventoryData = async (req, res, next) => {
     const {
         inv_make,
@@ -110,7 +128,7 @@ validate.checkInventoryData = async (req, res, next) => {
     errors = validationResult(req);
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav();
-        let select = await utilities.buildSelectClassification();
+        let select = await utilities.buildSelectClassification(classification_id);
 
         res.render("inventory/add-inventory", {
             errors,
