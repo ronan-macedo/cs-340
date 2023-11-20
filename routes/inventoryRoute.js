@@ -15,11 +15,13 @@ router.get("/management", utilities.handleErrors(invController.buildManagement))
 router.get("/add-classification", utilities.handleErrors(invController.buildaddClassification));
 // Route to build add inventory view
 router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory));
+// Route to handle new classification
 router.post(
     '/add-classification',
     invValidate.classificationRules(),
     invValidate.checkClassificationData,
     utilities.handleErrors(invController.addClassification));
+// Route to handle new inventory
 router.post(
     '/add-inventory',
     invValidate.inventoryRules(),

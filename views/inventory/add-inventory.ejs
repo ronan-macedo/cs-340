@@ -1,13 +1,13 @@
 <div class="inv-container">
-    <h1>Add Vehicle</h1>
+    <h1>Add Inventory</h1>
     <%- messages() %>
     <% if (errors) { %>
     <ul class="notice">
         <% errors.array().forEach(error=> { %>
-            <li>
-                <%= error.msg %>
-            </li>
-            <% }) %>
+        <li>
+            <%= error.msg %>
+        </li>
+        <% }) %>
     </ul>
     <% } %>
     <div class="inv-form">
@@ -25,10 +25,20 @@
             <textarea name="inv_description" id="inv_description"><%= locals.inv_description %></textarea><br>
             <label for="inv_image"><b>Image*</b></label><br>
             <input type="text" name="inv_image" id="inv_image" placeholder="Enter image path here" pattern=".{2,}"
-                value="/images/vehicles/no-image.png" required><br>
+                <% if (locals.inv_image) { %>
+                    value="<%= locals.inv_image %>"
+                <% } else { %>
+                    value="/images/vehicles/no-image.png"
+                <% } %>
+                required><br>
             <label for="inv_thumbnail"><b>Thumbnail*</b></label><br>
             <input type="text" name="inv_thumbnail" id="inv_thumbnail" placeholder="Enter thumbnail path here"
-                pattern=".{2,}" value="/images/vehicles/no-image-tn.png"
+                pattern=".{2,}" 
+                <% if (locals.inv_thumbnail) { %>
+                    value="<%= locals.inv_thumbnail %>"
+                <% } else { %>
+                    value="/images/vehicles/no-image.png"
+                <% } %>
                 required><br>
             <label for="inv_price"><b>Price*</b></label><br>
             <input type="number" name="inv_price" id="inv_price" placeholder="Enter price here" step="0.01" min="0"
@@ -40,8 +50,8 @@
             <input type="text" name="inv_color" id="inv_color" placeholder="Enter color here" pattern=".{2,}"
                 value="<%= locals.inv_color %>" required><br>
             <%- selectClassification %>
-                <br>
-                <input title="Click to add vehicle" type="submit" value="Add Vehicle">
+            <br>
+            <input title="Click to add vehicle" type="submit" value="Add Vehicle">
         </form>
     </div>
     <p><a title="Click to back to vehicle management" href="/inv/management">Back to Vehicle Management</a>
