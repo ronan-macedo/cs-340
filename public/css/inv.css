@@ -24,7 +24,11 @@
 .inv-display {
     display: flex;
     flex-direction: column;
-    max-width: 90%;
+    max-width: 100%;
+}
+
+.inv-list li {
+    margin-bottom: .75rem;
 }
 
 .inv-item {
@@ -55,7 +59,7 @@
 .vehicle-details {
     display: flex;
     flex-direction: column;
-    max-width: 90%;
+    max-width: 100%;
 }
 
 .vehicle-details li {
@@ -125,6 +129,54 @@
     color: var(--std-red);
 }
 
+.inv-form input[type=submit]:disabled {
+    background-color: var(--dark-grey);
+    color: var(--white);
+}
+
+.inv-form input[type=text]:read-only,
+.inv-form input[type=number]:read-only {
+    background-color: var(--light-grey);
+}
+
+#inventoryDisplay {
+    margin-top: 1rem;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: .05rem solid var(--dark-blue);    
+}
+
+.vehicle-selection select {
+    border-radius: .25rem;
+    padding: .1rem;
+    border: .05rem solid var(--dark-blue);
+    margin-left: .25rem;
+}
+
+.vehicle-selection select option[value="0"] {
+    display: none;
+}
+
+.vehicle-selection {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+}
+
+#inventoryDisplay th,
+#inventoryDisplay td {
+    text-align: left;
+    padding: 1rem;
+}
+
+#inventoryDisplay thead {
+    background-color: var(--light-blue);
+}
+
+#inventoryDisplay tr:nth-child(even) {
+    background-color: var(--light-grey);
+}
+
 @media screen and (min-width: 48rem) {
 
     .inv-container {
@@ -175,10 +227,14 @@
     .inv-form textarea,
     .inv-form select {
         width: 14rem;
-    }    
+    }
 
     .inv-form input[type=submit] {
         font-size: .85rem;
         max-width: 8rem;
+    }
+
+    #inventoryDisplay {
+        max-width: 28rem;
     }
 }

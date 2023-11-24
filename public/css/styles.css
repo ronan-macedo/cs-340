@@ -147,6 +147,7 @@ ul {
   float: left;
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .logo img {
@@ -157,11 +158,12 @@ ul {
 .logo .site-name {
   display: block;
   margin-left: .5rem;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 
 #tools {
+  margin: 0;
   float: right;
 }
 

@@ -1,7 +1,6 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
-
 /**
  * Connection Pool
  */

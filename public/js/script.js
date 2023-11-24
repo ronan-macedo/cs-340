@@ -1,18 +1,27 @@
+'use strict'
 /**
  * Handle loader when submit or click a form
  */
 document.addEventListener('submit', () => {
-    document.getElementById("loader").style.display = "block";
+    loaderHandler(true);
 });
 
 let links = document.getElementsByTagName("a");
 
 for (var i = 0; i < links.length ; i++) {
     links[i].addEventListener('click', () => {
-        document.getElementById("loader").style.display = "block";
+        loaderHandler(true);        
     });
 }
 
 document.addEventListener('onload', () => {
-    document.getElementById("loader").style.display = "none";
+    loaderHandler(false);
 });
+
+const loaderHandler = (isLoad) => {
+    if (isLoad) {
+        document.getElementById("loader").style.display = "block";
+    } else {
+        document.getElementById("loader").style.display = "none";
+    }
+}

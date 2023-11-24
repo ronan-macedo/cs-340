@@ -9,6 +9,7 @@ const app = express();
 const baseController = require("./controllers/baseController");
 const utilities = require("./utilities");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 /**
  * Middleware
@@ -31,8 +32,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(utilities.checkJWTToken);
 
 /**
  * EJS Configuration
@@ -88,8 +91,8 @@ app.use(async (err, req, res, next) => {
 const port = process.env.PORT;
 const host = process.env.HOST;
 const appMessage = (host) ?
-  `app listening on http://${host}:${port}` :
-  "app is up and running";
+  `App listening on http://${host}:${port}` :
+  "App is up and running";
 
 /**
  * Log statement to confirm server operation
