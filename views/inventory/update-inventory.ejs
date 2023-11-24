@@ -1,5 +1,5 @@
 <div class="inv-container">
-    <h1>Add Vehicle</h1>
+    <h1>Edit <%= inv_make %> <%= inv_model %></h1>
     <%- messages() %>
     <% if (errors) { %>
     <ul class="notice">
@@ -11,50 +11,66 @@
     </ul>
     <% } %>
     <div class="inv-form">
-        <form action="/inv/add-inventory" method="post">
+        <form id="updateInventory" action="/inv/update-inventory" method="post">
             <label for="inv_make"><b>Manufacturer*</b></label><br>
             <input type="text" name="inv_make" id="inv_make" placeholder="Enter manufacturer here" pattern=".{2,}"
-                value="<%= locals.inv_make %>" required><br>
+                <% if (inv_make) { %>
+                    value="<%= inv_make %>"
+                <% } %>
+                required><br>
             <label for="inv_model"><b>Model*</b></label><br>
             <input type="text" name="inv_model" id="inv_model" placeholder="Enter model here" pattern=".{2,}"
-                value="<%= locals.inv_model %>" required><br>
+                <% if (inv_model) { %>
+                    value="<%= inv_model %>"
+                <% } %>
+                required><br>
             <label for="inv_year"><b>Year*</b></label><br>
             <input type="number" name="inv_year" id="inv_year" placeholder="Enter year here"
-                value="<%= locals.inv_year %>" required><br>
+                <% if (inv_year) { %>
+                    value="<%= inv_year %>"
+                <% } %>
+                required><br>
             <label for="inv_description"><b>Description*</b></label><br>
-            <textarea name="inv_description" id="inv_description" required><%= locals.inv_description %></textarea><br>
+            <textarea name="inv_description" id="inv_description" required><% if (inv_description) { %><%= inv_description %><% } %></textarea><br>
             <label for="inv_image"><b>Image*</b></label><br>
             <input type="text" name="inv_image" id="inv_image" placeholder="Enter image path here" pattern=".{2,}"
-                <% if (locals.inv_image) { %>
-                    value="<%= locals.inv_image %>"
-                <% } else { %>
-                    value="/images/vehicles/no-image.png"
+                <% if (inv_image) { %>
+                    value="<%= inv_image %>"
                 <% } %>
                 required><br>
             <label for="inv_thumbnail"><b>Thumbnail*</b></label><br>
             <input type="text" name="inv_thumbnail" id="inv_thumbnail" placeholder="Enter thumbnail path here"
                 pattern=".{2,}" 
-                <% if (locals.inv_thumbnail) { %>
-                    value="<%= locals.inv_thumbnail %>"
-                <% } else { %>
-                    value="/images/vehicles/no-image-tn.png"
+                <% if (inv_thumbnail) { %>
+                    value="<%= inv_thumbnail %>"
                 <% } %>
                 required><br>
             <label for="inv_price"><b>Price*</b></label><br>
             <input type="number" name="inv_price" id="inv_price" placeholder="Enter price here" step="0.01" min="0"
-                value="<%= locals.inv_price %>" lang="en-US" required><br>
+                <% if (inv_price) { %>
+                    value="<%= inv_price %>"
+                <% } %>
+                lang="en-US" required><br>
             <label for="inv_miles"><b>Miles*</b></label><br>
             <input type="number" name="inv_miles" id="inv_miles" placeholder="Enter miles here" step="0.01" min="0"
-                value="<%= locals.inv_miles %>" lang="en-US" required><br>
+                <% if (inv_miles) { %>
+                    value="<%= inv_miles %>"
+                <% } %>  
+                lang="en-US" required><br>
             <label for="inv_color"><b>Color*</b></label><br>
             <input type="text" name="inv_color" id="inv_color" placeholder="Enter color here" pattern=".{2,}"
-                value="<%= locals.inv_color %>" required><br>
+                <% if (inv_color) { %>
+                    value="<%= inv_color %>"
+                <% } %> 
+                required><br>
             <%- selectClassification %>
             <br>
-            <input title="Click to add vehicle" type="submit" value="Add Vehicle">
+            <input type="hidden" name="inv_id" value="<%= inv_id %>">
+            <input title="Click to update vehicle" disabled type="submit" value="Update Inventory">
         </form>
     </div>
     <p>
-        <a title="Click to back to vehicle management" href="/inv">Back to inventory management</a>
+        <a title="Click to back to inventory management" href="/inv">Back to inventory management</a>
     </p>
 </div>
+<script src="/js/update-inventory.js"></script>

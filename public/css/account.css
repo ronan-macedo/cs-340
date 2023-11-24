@@ -45,6 +45,11 @@ input:required:invalid {
     color: var(--std-red);
 }
 
+input[type=submit]:disabled {
+    background-color: var(--dark-grey);
+    color: var(--white);
+}
+
 .switch {
     position: relative;
     display: block;
@@ -158,6 +163,6 @@ input:checked+.slider:before {
 
     input[type=submit] {
         font-size: .85rem;
-        max-width: 7rem;
+        max-width: 8rem;
     }
 }

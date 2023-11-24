@@ -1,0 +1,19 @@
+<div class="account-container">
+    <h1>Account Management</h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <%  }) %>
+        </ul>
+    <% } %>
+    <h2>Welcome <%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></h2>
+    <h3>Manage your account:</h3>
+    <a title="Click to update account" href="/account/account-update">Account update</a>
+    <% if (locals.accountData.account_type == 'Employee'
+        || locals.accountData.account_type == 'Admin') { %>
+    <h3>Manage inventory:</h3>
+    <a title="Click to manage inventory" href="/inv">Inventory management</a>
+    <% } %>
+</div>

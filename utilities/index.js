@@ -1,4 +1,6 @@
 const invModel = require("../models/inventory-model");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const util = {};
 
 /**
@@ -109,11 +111,84 @@ util.buildSelectClassification = async (classificationId) => {
     return select;
 }
 
-/* ****************************************
+/**
+ * Build classifications form select 
+ */
+util.buildClassificationList = async () => {
+    let data = await invModel.getClassifications();
+    select = '<select id="classificationList">';
+    select += '<option value="0" selected>Categories</option>';
+    data.rows.forEach((row) => {
+        select += '<option value="' + row.classification_id + '"';
+        select += '>' + row.classification_name + '</option>';
+    });
+    select += '</select><br>';
+    return select;
+}
+
+/**
+ * Middleware to check token validity 
+ */
+util.checkJWTToken = (req, res, next) => {
+    if (req.cookies.jwt) {
+        jwt.verify(
+            req.cookies.jwt,
+            process.env.ACCESS_TOKEN_SECRET,
+            (err, accountData) => {
+                if (err) {
+                    req.flash("Please log in");
+                    res.clearCookie("jwt");
+                    return res.redirect("/account/login");
+                }
+                res.locals.accountData = accountData;
+                res.locals.loggedin = 1;
+                next();
+            })
+    } else {
+        next();
+    }
+}
+
+/**
+ * Middleware to check login
+ */
+util.checkLogin = (req, res, next) => {
+    if (res.locals.loggedin) {
+        next();
+    } else {
+        req.flash("notice", "Please log in.");
+        return res.redirect("/account/login");
+    }
+}
+
+/**
+ * Middleware to check logged user
+ */
+util.checkLogged = (req, res, next) => {
+    if (!res.locals.loggedin) {
+        next();
+    } else {
+        return res.redirect("/account/");
+    }
+}
+
+/**
+ * Middleware to check client permissions
+ */
+util.checkClientType = (req, res, next) => {
+    if (res.locals.accountData.account_type == 'Employee'
+        || res.locals.accountData.account_type == 'Admin') {
+        next();
+    } else {        
+        return res.redirect("/account/");
+    }
+}
+
+/**
  * Middleware For Handling Errors
  * Wrap other function in this for 
- * General Error Handling
- **************************************** */
+ * General Error Handling 
+ */
 util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
 module.exports = util;

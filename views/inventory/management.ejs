@@ -1,9 +1,31 @@
 <div class="inv-container">
-    <h1>Vehicle Management</h1>
+    <h1>Inventory Management</h1>
     <%- messages() %>
-    <ul>
-        <li><a href="/inv/add-classification" title="Click to add classification">Add a new classification</a></li>
-        <br>
-        <li><a href="/inv/add-inventory" title="Click to add inventory">Add a new inventory</a></li>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error=> { %>
+            <li>
+                <%= error.msg %>
+            </li>
+            <% }) %>
+        </ul>
+    <% } %>
+    <ul class="inv-list">
+        <li>
+            <a href="/inv/add-classification" title="Click to add classification">Add a new classification</a>
+        </li>
+        <li>
+            <a href="/inv/add-inventory" title="Click to add vehicle">Add a new vehicle</a>
+        </li>
     </ul>
+    <div class="vehicle-selection">
+        <label for="classificationList"><b>Please, select a category:</b></label><%- selectClassification %>
+        <table id="inventoryDisplay"></table>
+        <noscript>JavaScript must be enabled to use this page.</noscript>
+    </div>
+    <br>
+    <p>
+        <a title="Click to go to account management" href="/account">Back to account management</a>
+    </p>    
 </div>
+<script src="/js/inventory.js"></script>
