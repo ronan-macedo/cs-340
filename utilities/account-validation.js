@@ -94,7 +94,14 @@ validate.updateProfileRules = () => {
             .trim()
             .isEmail()
             .normalizeEmail()
-            .withMessage("A valid email is required."),
+            .withMessage("A valid email is required.")
+            .custom(async (account_email, { req }) => {
+                const { account_id } = req.body;
+                const existingAccount = await accountModel.checkExistingEmailByUser(account_email);
+                if (existingAccount && existingAccount.account_id !== parseInt(account_id)) {
+                    throw new Error("Email belongs to another user. Please choose different email.");
+                }
+            }),
     ];
 }
 
@@ -164,11 +171,11 @@ validate.checkLoginData = async (req, res, next) => {
  * Check data and return errors or continue to update password
  */
 validate.checkUpdatePasswordData = async (req, res, next) => {
+    const { account_id } = req.body;
     let errors = [];
     errors = validationResult(req);
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav();
-        const account_id = res.locals.accountData.account_id;
         const accountData = await accountModel.getAccountByAccountId(account_id);
         res.status(400).render("./account/account-update", {
             title: "Account Update",
@@ -189,12 +196,11 @@ validate.checkUpdatePasswordData = async (req, res, next) => {
  * Check data and return errors or continue to update profile
  */
 validate.checkUpdateProfileData = async (req, res, next) => {
-    const { account_firstname, account_lastname, account_email } = req.body;
+    const { account_firstname, account_lastname, account_email, account_id } = req.body;
     let errors = [];
     errors = validationResult(req);
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav();
-        const account_id = res.locals.accountData.account_id;        
         res.render("./account/account-update", {
             title: "Account Update",
             nav,

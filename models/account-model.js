@@ -32,6 +32,19 @@ accountModel.checkExistingEmail = async (account_email) => {
 }
 
 /**
+ * Check for existing email by user
+ */
+accountModel.checkExistingEmailByUser = async (account_email) => {
+    try {
+        const sql = "SELECT account_id, account_email FROM public.account WHERE account_email = $1";
+        const email = await pool.query(sql, [account_email]);
+        return email.rows[0];
+    } catch (error) {
+        throw new Error("No matching email found");
+    }
+}
+
+/**
  * Return account data using email address
  */
 accountModel.getAccountByEmail = async (account_email) => {
