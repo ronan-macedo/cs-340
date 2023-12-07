@@ -39,7 +39,7 @@ const buildInventoryList = (data) => {
     // Set up the table body 
     dataTable += '<tbody>';
     // Iterate over all vehicles in the array and put each in a row 
-    data.forEach(function (element) {
+    data.forEach((element) => {
         console.log(element.inv_id + ", " + element.inv_model);
         dataTable += `<tr><td>${element.inv_make} ${element.inv_model}</td>`;
         dataTable += `<td><a onclick="loaderHandler(true)" href='/inv/edit/${element.inv_id}' title='Click to update'>Modify</a></td>`;

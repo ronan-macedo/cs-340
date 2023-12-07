@@ -17,9 +17,12 @@
         <li>
             <a href="/inv/add-inventory" title="Click to add vehicle">Add a new vehicle</a>
         </li>
+        <li>
+            <a href="/inv/gallery" title="Click to go to gallery">Gallery</a>
+        </li>
     </ul>
-    <div class="vehicle-selection">
-        <label for="classificationList"><b>Please, select a category:</b></label><%- selectClassification %>
+    <div class="vehicle-selection">        
+        <label for="classificationList"><b>Please, select a classification:</b></label><%- selectClassification %>
         <table id="inventoryDisplay"></table>
         <noscript>JavaScript must be enabled to use this page.</noscript>
     </div>
@@ -28,4 +31,5 @@
         <a title="Click to go to account management" href="/account">Back to account management</a>
     </p>    
 </div>
+<script src="/js/script.js"></script>
 <script src="/js/inventory.js"></script>

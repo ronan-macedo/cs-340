@@ -1,17 +1,17 @@
 const pool = require("../database/");
-const invModel = {};
+const inventoryModel = {};
 
 /**
  * Get all classification data 
  */
-invModel.getClassifications = async () => {
+inventoryModel.getClassifications = async () => {
     return await pool.query("SELECT * FROM public.classification ORDER BY classification_name");
 }
 
 /**
  * Get all inventory items and classification_name by classification_id 
  */
-invModel.getInventoryByClassificationId = async (classificationId) => {
+inventoryModel.getInventoryByClassificationId = async (classificationId) => {
     try {
         const data = await pool.query(
             `SELECT * FROM public.inventory AS i 
@@ -21,69 +21,84 @@ invModel.getInventoryByClassificationId = async (classificationId) => {
             [classificationId]);
         return data.rows;
     } catch (error) {
-        throw new Error("getclassificationsbyid error " + error);
+        throw new Error(`getclassificationsbyid error ${error}`);
     }
 }
 
 /**
  * Get classification_name by classification_id
  */
-invModel.getClassificationName = async (classification_id) => {
+inventoryModel.getClassificationName = async (classification_id) => {
     try {
         const sql = "SELECT classification_name FROM public.classification WHERE classification_id = $1";
         const data = await pool.query(sql, [classification_id]);
         return data.rows[0].classification_name
     } catch (error) {
-        throw new Error("getClassificationName error " + error);
+        throw new Error(`getClassificationName error ${error}`);
     }
 }
 
 /**
- * Get vehicle detail by invId
+ * Get vehicle detail by inv_id
  */
-invModel.getInventoryByInvId = async (invId) => {
+inventoryModel.getInventoryByInvId = async (inv_id) => {
     try {
         const data = await pool.query(
             `SELECT * FROM public.inventory AS i
             INNER JOIN public.classification AS c 
             ON i.classification_id = c.classification_id
-            WHERE i.inv_id = $1`, 
-            [invId]);
+            WHERE i.inv_id = $1`,
+            [inv_id]);
         return data.rows[0];
     } catch (error) {
-        throw new Error("getInventoryByInvId error " + error);
+        throw new Error(`getInventoryByInvId error ${error}`);
+    }
+}
+
+/**
+ *  Get inventory images path
+ */
+inventoryModel.getImagesPath = async (inv_id) => {
+    try {
+        const sql = `SELECT inv_image, inv_thumbnail
+            FROM public.inventory
+            WHERE inv_id = $1`;
+        const data = await pool.query(sql, [inv_id]);
+        return data.rows[0];
+    } catch (error) {
+        throw new Error(`getImagesPath error ${error}`);
     }
 }
 
 /**
  * Check existing classification by classification_name
  */
-invModel.checkExistingClassification = async (classification_name) => {
+inventoryModel.checkExistingClassification = async (classification_name) => {
     try {
         const sql = "SELECT * FROM public.classification WHERE classification_name = $1";
         const classification = await pool.query(sql, [classification_name]);
         return classification.rowCount;
     } catch (error) {
-        throw new Error("checkExistingClassification error " + error);
+        throw new Error(`checkExistingClassification error ${error}`);
     }
 }
 
 /**
  * Add new classification
  */
-invModel.addClassification = async (classification_name) => {
+inventoryModel.addClassification = async (classification_name) => {
     try {
         const sql = "INSERT INTO public.classification (classification_name) VALUES ($1) RETURNING *";
         return await pool.query(sql, [classification_name]);
     } catch (error) {
-        throw new Error("addClassification error " + error);
+        throw new Error(`addClassification error ${error}`);
     }
 }
 
 /**
  * Add new inventory
  */
-invModel.addInventory = async (
+inventoryModel.addInventory = async (
     inv_make,
     inv_model,
     inv_year,
@@ -96,7 +111,8 @@ invModel.addInventory = async (
     classification_id) => {
     try {
         const sql = `INSERT INTO public.inventory 
-            (inv_make, inv_model, 
+            (inv_make, 
+            inv_model, 
             inv_year, 
             inv_description, 
             inv_image, 
@@ -117,14 +133,14 @@ invModel.addInventory = async (
             inv_color,
             classification_id]);
     } catch (error) {
-        throw new Error("addClassification error " + error);
+        throw new Error(`addClassification error ${error}`);
     }
 }
 
 /**
  * Update inventory
  */
-invModel.updateInventory = async (
+inventoryModel.updateInventory = async (
     inv_make,
     inv_model,
     inv_year,
@@ -164,18 +180,18 @@ invModel.updateInventory = async (
             classification_id,
             inv_id]);
     } catch (error) {
-        throw new Error("updateInventory error " + error);
+        throw new Error(`updateInventory error ${error}`);
     }
 }
 
-invModel.deleteInventory = async (inv_id) => {
+inventoryModel.deleteInventory = async (inv_id) => {
     try {
         const sql = `DELETE FROM public.inventory
             WHERE inv_id = $1`;
         return await pool.query(sql, [inv_id]);
     } catch (error) {
-        throw new Error("deleteInventory error " + error);
+        throw new Error(`deleteInventory error ${error}`);
     }
 }
 
-module.exports = invModel;
+module.exports = inventoryModel;

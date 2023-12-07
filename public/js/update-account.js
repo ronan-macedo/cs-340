@@ -1,3 +1,5 @@
+'use strict'
+
 const profileForm = document.querySelector("#updateProfile");
 profileForm.addEventListener("change", () => {
     const updateBtn = document.querySelector("#profileBtn");

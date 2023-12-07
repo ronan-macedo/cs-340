@@ -2,7 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const utilities = require("../utilities");
 const accountController = require("../controllers/accountController");
-const regValidate = require('../utilities/account-validation');
+const accountValidate = require('../utilities/account-validation');
 
 // Route to build login view
 router.get("/login", utilities.checkLogged, utilities.handleErrors(accountController.buildLogin));
@@ -17,26 +17,26 @@ router.get("/logout", utilities.handleErrors(accountController.accountLogout));
 // Process new registration
 router.post(
     "/register",
-    regValidate.registationRules(),
-    regValidate.checkRegData,
+    accountValidate.registationRules(),
+    accountValidate.checkRegData,
     utilities.handleErrors(accountController.registerAccount));
 // Process the login request
 router.post(
     "/login",
-    regValidate.loginRules(),
-    regValidate.checkLoginData,
+    accountValidate.loginRules(),
+    accountValidate.checkLoginData,
     utilities.handleErrors(accountController.accountLogin));
 // Process the update password request 
 router.post(
     "/update-password",
-    regValidate.updatePasswordRules(),
-    regValidate.checkUpdatePasswordData,
+    accountValidate.updatePasswordRules(),
+    accountValidate.checkUpdatePasswordData,
     utilities.handleErrors(accountController.updatePassword));
 // Process the update profile request
 router.post(
     "/update-profile",
-    regValidate.updateProfileRules(),
-    regValidate.checkUpdateProfileData,
+    accountValidate.updateProfileRules(),
+    accountValidate.checkUpdateProfileData,
     utilities.handleErrors(accountController.updateProfile));
 
 module.exports = router;

@@ -11,7 +11,7 @@
     </ul>
     <% } %>
     <div class="inv-form">
-        <form id="updateInventory" action="/inv/update-inventory" method="post">
+        <form id="updateInventory" action="/inv/update-inventory" method="post" enctype="multipart/form-data">
             <label for="inv_make"><b>Manufacturer*</b></label><br>
             <input type="text" name="inv_make" id="inv_make" placeholder="Enter manufacturer here" pattern=".{2,}"
                 <% if (inv_make) { %>
@@ -32,19 +32,17 @@
                 required><br>
             <label for="inv_description"><b>Description*</b></label><br>
             <textarea name="inv_description" id="inv_description" required><% if (inv_description) { %><%= inv_description %><% } %></textarea><br>
-            <label for="inv_image"><b>Image*</b></label><br>
-            <input type="text" name="inv_image" id="inv_image" placeholder="Enter image path here" pattern=".{2,}"
-                <% if (inv_image) { %>
-                    value="<%= inv_image %>"
-                <% } %>
-                required><br>
-            <label for="inv_thumbnail"><b>Thumbnail*</b></label><br>
-            <input type="text" name="inv_thumbnail" id="inv_thumbnail" placeholder="Enter thumbnail path here"
-                pattern=".{2,}" 
-                <% if (inv_thumbnail) { %>
-                    value="<%= inv_thumbnail %>"
-                <% } %>
-                required><br>
+            <p><b>Image</b></p>
+            <label for="inv_image" class="custom-upload">
+                <img src="/images/site/upload.png" alt="upload cloud"> 
+                <span><b>Choose a file</b></span>
+            </label>
+            <input type="file" name="inv_image" id="inv_image" accept="image/*" onchange="loadFile(event)">
+            <div class="image-preview">
+                <img <% if (inv_image) { %>
+                    src="<%= inv_image %>"
+                <% } %> id="output" alt="output"><br>
+            </div>
             <label for="inv_price"><b>Price*</b></label><br>
             <input type="number" name="inv_price" id="inv_price" placeholder="Enter price here" step="0.01" min="0"
                 <% if (inv_price) { %>
@@ -73,4 +71,6 @@
         <a title="Click to back to inventory management" href="/inv">Back to inventory management</a>
     </p>
 </div>
+<script src="/js/script.js"></script>
 <script src="/js/update-inventory.js"></script>
+<script src="/js/image-handler.js"></script>

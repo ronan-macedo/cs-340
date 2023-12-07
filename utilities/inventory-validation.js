@@ -1,7 +1,7 @@
 const utilities = require(".");
 const { body, validationResult } = require("express-validator");
-const invModel = require("../models/inventory-model");
-const invcss = "inv";
+const inventoryModel = require("../models/inventory-model");
+const inventoryCss = "inv";
 const validate = {};
 
 /**
@@ -11,12 +11,12 @@ validate.classificationRules = () => {
     return [
         body("classification_name")
             .trim()
-            .isLength({ min: 1 })            
+            .isLength({ min: 1 })
             .withMessage("Please provide a classification name.")
             .matches(/^\w+$/)
             .withMessage("Classification should be single word.")
             .custom(async (classification_name) => {
-                const classification = await invModel.checkExistingClassification(classification_name);
+                const classification = await inventoryModel.checkExistingClassification(classification_name);
                 if (classification) {
                     throw new Error("Classification exists. Please choose other classification name.");
                 }
@@ -53,17 +53,7 @@ validate.inventoryRules = () => {
         body("inv_description")
             .trim()
             .isLength({ min: 2 })
-            .withMessage("Please provide a description."),
-
-        body("inv_image")
-            .trim()
-            .isLength({ min: 1 })
-            .withMessage("Please provide a image path."),
-
-        body("inv_thumbnail")
-            .trim()
-            .isLength({ min: 1 })
-            .withMessage("Please provide a thumbnail path."),
+            .withMessage("Please provide a description."),        
 
         body("inv_price")
             .trim()
@@ -116,17 +106,7 @@ validate.inventoryUpdateRules = () => {
         body("inv_description")
             .trim()
             .isLength({ min: 2 })
-            .withMessage("Please provide a description."),
-
-        body("inv_image")
-            .trim()
-            .isLength({ min: 1 })
-            .withMessage("Please provide a image path."),
-
-        body("inv_thumbnail")
-            .trim()
-            .isLength({ min: 1 })
-            .withMessage("Please provide a thumbnail path."),
+            .withMessage("Please provide a description."),        
 
         body("inv_price")
             .trim()
@@ -149,7 +129,7 @@ validate.inventoryUpdateRules = () => {
             .withMessage("Please provide a classification."),
 
         body("inv_id")
-            .trim()            
+            .trim()
             .isLength({ min: 1 })
             .withMessage("Please provide a inventory identification."),
     ];
@@ -168,7 +148,7 @@ validate.checkClassificationData = async (req, res, next) => {
             errors,
             title: "Add Classification",
             nav,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             classification_name,
         });
         return;
@@ -185,8 +165,6 @@ validate.checkInventoryData = async (req, res, next) => {
         inv_model,
         inv_year,
         inv_description,
-        inv_image,
-        inv_thumbnail,
         inv_price,
         inv_miles,
         inv_color,
@@ -203,14 +181,12 @@ validate.checkInventoryData = async (req, res, next) => {
             errors,
             title: "Add Inventory",
             nav,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             selectClassification: select,
             inv_make,
             inv_model,
             inv_year,
-            inv_description,
-            inv_image,
-            inv_thumbnail,
+            inv_description,            
             inv_price,
             inv_miles,
             inv_color,
@@ -228,9 +204,7 @@ validate.checkInventoryUpdateData = async (req, res, next) => {
         inv_make,
         inv_model,
         inv_year,
-        inv_description,
-        inv_image,
-        inv_thumbnail,
+        inv_description,        
         inv_price,
         inv_miles,
         inv_color,
@@ -243,20 +217,21 @@ validate.checkInventoryUpdateData = async (req, res, next) => {
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav();
         let select = await utilities.buildSelectClassification(classification_id);
+        const imagePath = await inventoryModel.getImagesPath(inv_id);
+        let inv_image = imagePath.inv_image;
 
         res.status(400).render("./inventory/update-inventory", {
             errors,
-            title: "Edit" + inv_make + inv_model,
+            title: `Edit ${inv_make} ${inv_model}`,
             nav,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             selectClassification: select,
             inv_id: inv_id,
             inv_make: inv_make,
             inv_model: inv_model,
-            inv_year: parseInt(inv_year),
-            inv_description: inv_description,
             inv_image: inv_image,
-            inv_thumbnail: inv_thumbnail,
+            inv_year: parseInt(inv_year),
+            inv_description: inv_description,            
             inv_price: parseFloat(inv_price),
             inv_miles: parseInt(inv_miles),
             inv_color: inv_color

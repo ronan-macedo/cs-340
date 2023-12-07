@@ -1,4 +1,4 @@
-const invModel = require("../models/inventory-model");
+const inventoryModel = require("../models/inventory-model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const util = {};
@@ -7,20 +7,18 @@ const util = {};
  * Constructs the nav HTML unordered list 
  */
 util.getNav = async (req, res, next) => {
-    let data = await invModel.getClassifications();
-    let list = "<ul>";
-    list += '<li><a href="/" title="Home page">Home</a></li>';
+    let data = await inventoryModel.getClassifications();
+    let list = `<ul>
+                    <li>
+                        <a href="/" title="Home page">Home</a>
+                    </li>`;
     data.rows.forEach((row) => {
-        list += "<li>";
-        list +=
-            '<a href="/inv/type/' +
-            row.classification_id +
-            '" title="See our inventory of ' +
-            row.classification_name +
-            ' vehicles">' +
-            row.classification_name +
-            "</a>";
-        list += "</li>";
+        list += `<li>        
+                    <a href="/inv/type/${row.classification_id}" 
+                    title="See our inventory of ${row.classification_name} vehicles">
+                    ${row.classification_name}
+                    </a>
+                </li>`;
     });
     list += "</ul>";
     return list;
@@ -34,22 +32,24 @@ util.buildClassificationGrid = async (data) => {
     if (data.length > 0) {
         grid = '<ul class="inv-display">';
         data.forEach(vehicle => {
-            grid += '<li class="inv-item">';
-            grid += '<a href="../../inv/detail/' + vehicle.inv_id
-                + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model
-                + 'details"><img src="' + vehicle.inv_thumbnail
-                + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
-                + ' on CSE Motors"></a>';
-            grid += '<div class="namePrice">';
-            grid += '<h2>';
-            grid += '<a href="../../inv/detail/' + vehicle.inv_id + '" title="View '
-                + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
-                + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>';
-            grid += '</h2>';
-            grid += '<span class="inv-price">$'
-                + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>';
-            grid += '</div>';
-            grid += '</li>';
+            grid += `<li class="inv-item">
+                        <a href="../../inv/detail/${vehicle.inv_id}" 
+                            title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
+                            <img src="${vehicle.inv_thumbnail}" 
+                                alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors">
+                        </a>
+                        <div class="namePrice">
+                            <h2>
+                                <a href="../../inv/detail/${vehicle.inv_id}" 
+                                title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
+                                    ${vehicle.inv_make} ${vehicle.inv_model}
+                                </a>
+                            </h2>
+                            <span class="inv-price">
+                                $ ${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}
+                            </span>
+                        </div>
+                    </li>`;
         });
         grid += '</ul>';
     } else {
@@ -61,53 +61,74 @@ util.buildClassificationGrid = async (data) => {
 /**
  * Build the vehicle datail view HTML 
  */
-util.buildVehicleDetails = async (data) => {
-    let details = '<div class="vehicle-details">';
+util.buildVehicleDetails = async (data, loggedin, account) => {
+    let details = '<div class="details">';
     if (data) {
-        details += '<h1 class="detail-title">' + data.inv_make + ' ' + data.inv_model + '</h1>';
-        details += '<div class="vehicle-hero">';
-        details += '<img src="' + data.inv_image + '" alt="Image of '
-            + data.inv_make + ' ' + data.inv_model
-            + ' on CSE Motors">';
-        details += '</div>';
-        details += '<div class="vehicle-info">';
-        details += '<span>Description:</span>'
-        details += '<p>' + data.inv_description + '</p>'
-        details += '<span>Year:</span>'
-        details += '<p>' + data.inv_year + '</p>'
-        details += '<span>Color:</span>'
-        details += '<p>' + data.inv_color + '</p>'
-        details += '<span>Miles:</span>'
-        details += '<p>' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p>'
-        details += '<span>Price:</span>'
-        details += '<p>$ ' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</p>'
-        details += '</div>';
-        details += '<ul>';
-        details += `<li><p><a href="/inv/type/${data.classification_id}" title="See our inventory of ${data.classification_name} vehicles">
-            Back to ${data.classification_name} vehicles
-            </a></p></li>`;
-        details += '</ul>'
-        details += '</div>';
+        details += `
+                    <h1 class="detail-title">
+                        ${data.inv_make} ${data.inv_model}
+                    </h1>
+                    <div class="vehicle-details">
+                        <div class="vehicle-hero">
+                            <img src="${data.inv_image}" 
+                                alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
+                        </div>
+                        <div class="vehicle-info">
+                            <span>Description:</span>
+                            <p>${data.inv_description}</p>
+                            <span>Year:</span>
+                            <p>${data.inv_year}</p>
+                            <span>Color:</span>
+                            <p>${data.inv_color}</p>
+                            <span>Miles:</span>
+                            <p>${new Intl.NumberFormat('en-US').format(data.inv_miles)}</p>
+                            <span>Price:</span>
+                            <p>$ ${new Intl.NumberFormat('en-US').format(data.inv_price)}</p>
+                        </div>
+                    </div>
+                </div>
+                <h2>Comments</h2>
+                <div id="erros"></div>
+                <div class="comment-section">
+                <input type="hidden" name="inv_id" id="inv_id" value="${data.inv_id}">`;
+        if (loggedin) {
+            details += `<label for="comment_text"><b>Add your comment:</b></label><br>
+                <textarea name="comment_text" id="comment_text"></textarea><br>
+                <input type="hidden" name="account_id" id="account_id" value="${account.account_id}">
+                <input type="hidden" name="account_type" id="account_type" value="${account.account_type}">
+                <button id="addComment">Add Comment</button>`;
+        } else {
+            details += `<p class="notice">You must log in to post a comment.</p>`
+        }
+        details += `<div id="comments"></div>
+                </div>
+                <p>
+                    <a href="/inv/type/${data.classification_id}" 
+                        title="See our inventory of ${data.classification_name} vehicles">
+                        Back to ${data.classification_name} vehicles
+                    </a>
+                </p>`;
     } else {
-        details += '<p class="notice">Sorry, no vehicle details found.</p>';
-        details += '</div>';
+        details += `<p class="notice">Sorry, no vehicle details found.</p>
+                </div>`;
     }
-    return details
+    return details;
 }
 
 /**
  * Build classifications form select 
  */
 util.buildSelectClassification = async (classificationId) => {
-    let data = await invModel.getClassifications();
-    let select = '<label for="classification_id"><b>Classification*</b></label><br>';
-    select += '<select id="classification_id" name="classification_id">';
+    let data = await inventoryModel.getClassifications();
+    let select = `<label for="classification_id"><b>Classification*</b></label><br>
+        <div class="select">
+        <select id="classification_id" name="classification_id">`;
     data.rows.forEach((row) => {
-        select += '<option value="' + row.classification_id + '"';
+        select += `<option value="${row.classification_id}"`;
         select += parseInt(classificationId) === row.classification_id ? " selected" : "";
-        select += '>' + row.classification_name + '</option>';
+        select += `>${row.classification_name}</option>`;
     });
-    select += '</select><br>';
+    select += '</select></div><br>';
     return select;
 }
 
@@ -115,12 +136,11 @@ util.buildSelectClassification = async (classificationId) => {
  * Build classifications form select 
  */
 util.buildClassificationList = async () => {
-    let data = await invModel.getClassifications();
-    select = '<select id="classificationList">';
-    select += '<option value="0" selected>Categories</option>';
+    let data = await inventoryModel.getClassifications();
+    let select = `<select id="classificationList">;
+        <option value="0" selected>Categories</option>`;
     data.rows.forEach((row) => {
-        select += '<option value="' + row.classification_id + '"';
-        select += '>' + row.classification_name + '</option>';
+        select += `<option value="${row.classification_id}">${row.classification_name}</option>`
     });
     select += '</select><br>';
     return select;
@@ -179,7 +199,7 @@ util.checkClientType = (req, res, next) => {
     if (res.locals.accountData.account_type == 'Employee'
         || res.locals.accountData.account_type == 'Admin') {
         next();
-    } else {        
+    } else {
         return res.redirect("/account/");
     }
 }

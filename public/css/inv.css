@@ -73,7 +73,8 @@
 .vehicle-hero img {
     display: block;
     border-radius: .25rem;
-    max-width: 100%;
+    width: 100%;
+    height: auto;
 }
 
 .vehicle-info {
@@ -88,6 +89,103 @@
     border-radius: .25rem;
     background-color: var(--light-blue);
 }
+
+.comment-section {
+    background-color: var(--light-grey);
+    padding: .5rem;
+    border-radius: .25rem;
+    margin-bottom: 2rem;
+}
+
+.comment-section textarea {
+    border-radius: .25rem;
+    border: .05rem solid var(--dark-blue);
+    margin-top: .25rem;
+    margin-bottom: .5rem;
+    padding: .35rem;
+    width: 100%;
+    height: 2.5rem;
+}
+
+.comment-section #addComment {
+    border-radius: .25rem;
+    padding: .35rem;
+    width: 100%;
+    background-color: var(--dark-blue);
+    border: transparent;
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.comment-section #addComment:hover {
+    cursor: pointer;
+    color: var(--dark-grey);
+    background-color: var(--light-blue);
+}
+
+.no-comment {
+    color: var(--dark-blue);
+}
+
+.user-comment {
+    margin-top: .5rem;
+    background-color: var(--light-blue);
+    border-radius: .25rem;
+    padding: .5rem;
+}
+
+.user-comment textarea {
+    max-width: 100% !important;
+}
+
+.user-comment textarea:read-only {
+    background-color: var(--light-grey);
+}
+
+.user-comment-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-comment-header p {
+    color: var(--dark-grey);
+    font-size: .8rem;
+}
+
+.user-comment-header img {
+    cursor: pointer;
+    display: block;
+    width: 1.25rem;
+    height: 1.5rem; 
+}
+
+.user-comment-buttons button {
+    cursor: pointer;
+    border: transparent;
+    background-color: transparent;
+    margin-right: .5rem;
+    border-radius: .25rem;
+    font-size: .85rem;
+    padding: .35rem;    
+    background-color: var(--dark-blue);
+    border: transparent;
+    color: var(--white);    
+}
+
+.user-comment-buttons button[disabled=disabled],
+.user-comment-buttons button:disabled {
+    background-color: var(--dark-grey);
+    color: var(--white);
+}
+
+.comment-dates {
+    text-align: right;
+    font-size: .65rem;
+}
+
+/* Vehicle Forms Styles */
 
 .inv-form input[type=text],
 .inv-form input[type=number],
@@ -106,6 +204,48 @@
     border: .05rem solid var(--dark-blue);
     margin-top: .25rem;
     margin-bottom: .5rem;
+}
+
+.inv-form input[type=file] {
+    display: none;
+}
+
+.inv-form .custom-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: .25rem;
+    padding: .35rem;
+    width: 100%;
+    background-color: var(--light-grey);
+    border: .05rem solid var(--dark-blue);
+    margin-top: .25rem;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.inv-form .custom-upload:hover {
+    cursor: pointer;
+    color: var(--dark-grey);
+    background-color: var(--light-blue);
+}
+
+.inv-form .custom-upload img {
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: .5rem;
+}
+
+.inv-form select {
+    overflow: auto;
+}
+
+.inv-form .image-preview img {
+    display: block;
+    width: 100%;
+    max-height: 20rem;
+    border-radius: .25rem;
 }
 
 .inv-form textarea {
@@ -144,7 +284,7 @@
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
-    border: .05rem solid var(--dark-blue);    
+    border: .05rem solid var(--dark-blue);
 }
 
 .vehicle-selection select {
@@ -152,6 +292,7 @@
     padding: .1rem;
     border: .05rem solid var(--dark-blue);
     margin-left: .25rem;
+    overflow: auto;
 }
 
 .vehicle-selection select option[value="0"] {
@@ -201,32 +342,27 @@
 
     /* Vehicle Details View Styles */
 
-    .vehicle-hero {
-        grid-area: vehicle-hero;
-    }
-
     .vehicle-info {
         margin-left: 2rem;
         margin-top: 0;
-        grid-area: vehicle-info;
-    }
-
-    .detail-title {
-        grid-area: detail-title;
     }
 
     .vehicle-details {
         display: grid;
-        grid-template-areas:
-            'detail-title detail-title'
-            'vehicle-hero vehicle-info';
+        grid-template-columns: 50% 50%;
     }
 
     .inv-form input[type=text],
     .inv-form input[type=number],
+    .inv-form .custom-upload,
     .inv-form textarea,
     .inv-form select {
         width: 14rem;
+    }
+
+    .inv-form .custom-upload {
+        justify-content: normal;
+        font-size: .75rem;
     }
 
     .inv-form input[type=submit] {
@@ -234,7 +370,28 @@
         max-width: 8rem;
     }
 
+    .inv-form .image-preview img {
+        width: 14rem;
+    }
+
     #inventoryDisplay {
         max-width: 28rem;
+    }
+
+    .comment-section textarea {
+        max-width: 50%;
+    }
+
+    .user-comment { 
+        max-width: 50%;
+    }
+
+    .comment-section #addComment {
+        font-size: .85rem;
+        max-width: 8rem;
+    }
+
+    .user-comment-buttons button {
+        font-size: .75rem;
     }
 }

@@ -2,68 +2,72 @@
 const express = require("express");
 const router = new express.Router();
 const utilities = require("../utilities");
-const invController = require("../controllers/invController");
-const invValidate = require('../utilities/inv-validation');
+const inventoryController = require("../controllers/inventoryController");
+const inventoryValidate = require('../utilities/inventory-validation');
 
 // Route to build inventory by classification view
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildInventory));
+router.get("/type/:classificationId", utilities.handleErrors(inventoryController.buildInventory));
 // Route to build vehicle details view
-router.get("/detail/:invId", utilities.handleErrors(invController.buildInventoryDetails));
+router.get("/detail/:inv_id", utilities.handleErrors(inventoryController.buildInventoryDetails));
 // Route to build edit inventory view
 router.get(
-    "/edit/:invId",
+    "/edit/:inv_id",
     utilities.checkLogin,
     utilities.checkClientType,
-    utilities.handleErrors(invController.buildUpdateInventory));
+    utilities.handleErrors(inventoryController.buildUpdateInventory));
 // Route to build delete inventory view
 router.get(
-    "/delete/:invId",
+    "/delete/:inv_id",
     utilities.checkLogin,
     utilities.checkClientType,
-    utilities.handleErrors(invController.buildDeleteInventory));
+    utilities.handleErrors(inventoryController.buildDeleteInventory));
 // Route to build inventory management view
 router.get(
     "/",
     utilities.checkLogin,
     utilities.checkClientType,
-    utilities.handleErrors(invController.buildManagement));
+    utilities.handleErrors(inventoryController.buildManagement));
 // Route to build add classification view
-router.get("/add-classification",
+router.get(
+    "/add-classification",
     utilities.checkLogin,
     utilities.checkClientType,
-    utilities.handleErrors(invController.buildAddClassification));
+    utilities.handleErrors(inventoryController.buildAddClassification));
 // Route to build add inventory view
 router.get(
     "/add-inventory",
     utilities.checkLogin,
     utilities.checkClientType,
-    utilities.handleErrors(invController.buildAddInventory));
+    utilities.handleErrors(inventoryController.buildAddInventory));
 // Route to handle inventory JSON response
 router.get(
     "/getInventory/:classification_id",
     utilities.checkLogin,
-    utilities.handleErrors(invController.getInventory));
+    utilities.checkClientType,
+    utilities.handleErrors(inventoryController.getInventory));
+// Route to build gallery by inv_id view
+router.get("/gallery", utilities.handleErrors(inventoryController.buildGallery));
 // Route to handle new classification
 router.post(
     '/add-classification',
-    invValidate.classificationRules(),
-    invValidate.checkClassificationData,
-    utilities.handleErrors(invController.addClassification));
+    inventoryValidate.classificationRules(),
+    inventoryValidate.checkClassificationData,
+    utilities.handleErrors(inventoryController.addClassification));
 // Route to handle new inventory
 router.post(
     '/add-inventory',
-    invValidate.inventoryRules(),
-    invValidate.checkInventoryData,
-    utilities.handleErrors(invController.addInventory));
+    inventoryValidate.inventoryRules(),
+    inventoryValidate.checkInventoryData,
+    utilities.handleErrors(inventoryController.addInventory));
 // Route to handle update inventory
 router.post(
     '/update-inventory',
-    invValidate.inventoryUpdateRules(),
-    invValidate.checkInventoryUpdateData,
-    utilities.handleErrors(invController.updateInventory));
+    inventoryValidate.inventoryUpdateRules(),
+    inventoryValidate.checkInventoryUpdateData,
+    utilities.handleErrors(inventoryController.updateInventory));
 // Route to handle delete inventory
 router.post(
-    '/delete-inventory',    
-    utilities.handleErrors(invController.deleteInventory));
+    '/delete-inventory',
+    utilities.handleErrors(inventoryController.deleteInventory));
 
 module.exports = router;
