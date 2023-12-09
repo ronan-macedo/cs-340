@@ -47,25 +47,25 @@ router.get(
     utilities.handleErrors(inventoryController.getInventory));
 // Route to build gallery by inv_id view
 router.get("/gallery", utilities.handleErrors(inventoryController.buildGallery));
-// Route to handle new classification
+// Process new classification
 router.post(
     '/add-classification',
     inventoryValidate.classificationRules(),
     inventoryValidate.checkClassificationData,
     utilities.handleErrors(inventoryController.addClassification));
-// Route to handle new inventory
+// Process new inventory
 router.post(
     '/add-inventory',
     inventoryValidate.inventoryRules(),
     inventoryValidate.checkInventoryData,
     utilities.handleErrors(inventoryController.addInventory));
-// Route to handle update inventory
+// Process update inventory
 router.post(
     '/update-inventory',
     inventoryValidate.inventoryUpdateRules(),
     inventoryValidate.checkInventoryUpdateData,
     utilities.handleErrors(inventoryController.updateInventory));
-// Route to handle delete inventory
+// Process delete inventory
 router.post(
     '/delete-inventory',
     utilities.handleErrors(inventoryController.deleteInventory));

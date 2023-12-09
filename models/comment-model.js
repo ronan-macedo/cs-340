@@ -58,7 +58,7 @@ commentModel.deleteComment = async (comment_id) => {
         const data = await pool.query(sql, [comment_id]);
         return data.rows[0];
     } catch (error) {
-        throw new Error(`updateComment error ${error}`);
+        throw new Error(`deleteComment error ${error}`);
     }
 }
 

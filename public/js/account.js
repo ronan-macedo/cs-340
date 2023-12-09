@@ -26,11 +26,11 @@ const numberCharPettern = /\d/g;
 const minimumLength = 12;
 
 passwordInput.onfocus = () => {
-    document.getElementById("passwordValidator").style.display = "block";
+    document.getElementById("passwordValidator").classList.add("visible");
 }
 
 passwordInput.onblur = () => {
-    document.getElementById("passwordValidator").style.display = "none";
+    document.getElementById("passwordValidator").classList.remove("visible");
 }
 
 passwordInput.onkeyup = () => {

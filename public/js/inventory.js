@@ -34,7 +34,7 @@ const buildInventoryList = (data) => {
     let inventoryDisplay = document.getElementById("inventoryDisplay");
     // Set up the table labels 
     let dataTable = '<thead>';
-    dataTable += '<tr><th>Vehicle Name</th><td>&nbsp;</td><td>&nbsp;</td></tr>';
+    dataTable += '<tr><th colspan="2">Vehicle Name</th><td>&nbsp;</td><td>&nbsp;</td></tr>';
     dataTable += '</thead>';
     // Set up the table body 
     dataTable += '<tbody>';
@@ -43,7 +43,8 @@ const buildInventoryList = (data) => {
         console.log(element.inv_id + ", " + element.inv_model);
         dataTable += `<tr><td>${element.inv_make} ${element.inv_model}</td>`;
         dataTable += `<td><a onclick="loaderHandler(true)" href='/inv/edit/${element.inv_id}' title='Click to update'>Modify</a></td>`;
-        dataTable += `<td><a onclick="loaderHandler(true)" href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`;
+        dataTable += `<td><a onclick="loaderHandler(true)" href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td>`;
+        dataTable += `<td><a onclick="loaderHandler(true)" href='/gallery/${element.inv_id}' title='Click to manage vehicle gallary'>Gallery</a></td></tr>`;
     })
     dataTable += '</tbody>';
     // Display the contents in the Inventory Management view 

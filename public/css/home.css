@@ -1,6 +1,6 @@
 .home-container {
     padding: 1.25rem .625rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .hero {
@@ -27,7 +27,7 @@
     font-weight: bold;
 }
 
-.hero-caption ul {    
+.hero-caption ul {
     margin: 0;
     padding: 0;
 }
@@ -42,7 +42,7 @@
     margin-bottom: .625rem;
 }
 
-.upgrades a {    
+.upgrades a {
     color: var(--dark-blue);
 }
 
@@ -80,6 +80,11 @@
 }
 
 @media screen and (min-width: 48rem) {
+
+    .home-container {
+        font-size: .75rem;
+    }
+
     .home-reviews {
         grid-area: reviews;
     }

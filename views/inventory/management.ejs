@@ -16,15 +16,14 @@
         </li>
         <li>
             <a href="/inv/add-inventory" title="Click to add vehicle">Add a new vehicle</a>
-        </li>
-        <li>
-            <a href="/inv/gallery" title="Click to go to gallery">Gallery</a>
-        </li>
+        </li>        
     </ul>
     <div class="vehicle-selection">        
         <label for="classificationList"><b>Please, select a classification:</b></label><%- selectClassification %>
-        <table id="inventoryDisplay"></table>
-        <noscript>JavaScript must be enabled to use this page.</noscript>
+        <div class="responsive-table">
+            <table id="inventoryDisplay"></table>
+            <noscript>JavaScript must be enabled to use this page.</noscript>
+        </div>        
     </div>
     <br>
     <p>

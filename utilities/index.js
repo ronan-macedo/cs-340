@@ -1,5 +1,6 @@
 const inventoryModel = require("../models/inventory-model");
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 require("dotenv").config();
 const util = {};
 
@@ -33,14 +34,14 @@ util.buildClassificationGrid = async (data) => {
         grid = '<ul class="inv-display">';
         data.forEach(vehicle => {
             grid += `<li class="inv-item">
-                        <a href="../../inv/detail/${vehicle.inv_id}" 
+                        <a href="/inv/detail/${vehicle.inv_id}" 
                             title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
                             <img src="${vehicle.inv_thumbnail}" 
                                 alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors">
                         </a>
                         <div class="namePrice">
                             <h2>
-                                <a href="../../inv/detail/${vehicle.inv_id}" 
+                                <a href="/inv/detail/${vehicle.inv_id}" 
                                 title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
                                     ${vehicle.inv_make} ${vehicle.inv_model}
                                 </a>
@@ -61,19 +62,51 @@ util.buildClassificationGrid = async (data) => {
 /**
  * Build the vehicle datail view HTML 
  */
-util.buildVehicleDetails = async (data, loggedin, account) => {
+util.buildVehicleDetails = async (data, loggedin, account, gallery) => {
     let details = '<div class="details">';
     if (data) {
-        details += `
-                    <h1 class="detail-title">
+        details += `<h1 class="detail-title">
                         ${data.inv_make} ${data.inv_model}
                     </h1>
-                    <div class="vehicle-details">
-                        <div class="vehicle-hero">
-                            <img src="${data.inv_image}" 
-                                alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
-                        </div>
-                        <div class="vehicle-info">
+                    <div class="vehicle-details">`;
+        if (gallery.length > 0) {
+            let numberOfSlides = gallery.length + 1;
+            let slideCounter = 1;
+            details += `<div class="vehicle-gallery">
+                    <div class="vehicle-slides">
+                    <div class="number-text">${slideCounter} / ${numberOfSlides}</div>
+                    <img src="${data.inv_image}" alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
+                    </div>`;
+            gallery.forEach(image => {
+                slideCounter++;
+                details += `<div class="vehicle-slides">
+                        <div class="number-text">${slideCounter} / ${numberOfSlides}</div>
+                        <img src="${image.gallery_image}" alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
+                    </div>`;
+            });
+            slideCounter = 1;            
+            details += `<span class="prev cursor" onclick="plusSlides(-1)">&#8249;</span>
+                <span class="next cursor" onclick="plusSlides(1)">&#8250;</span>`;
+            details += `<div class="gallery-row">
+                    <div class="column">
+                    <img class="dot cursor" src="${data.inv_image}" onclick="currentSlide(${slideCounter})"
+                        alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
+                </div>`;
+            gallery.forEach(image => {
+                slideCounter++;
+                details += `<div class="column">
+                    <img class="dot cursor" src="${image.gallery_image}" onclick="currentSlide(${slideCounter})"
+                        alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
+                </div>`;
+            });
+            details += '</div></div>';
+        }
+        else {
+            details += `<div class="vehicle-hero">
+                    <img src="${data.inv_image}" alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
+                </div>`;
+        }
+        details += `<div class="vehicle-info">
                             <span>Description:</span>
                             <p>${data.inv_description}</p>
                             <span>Year:</span>
@@ -210,5 +243,16 @@ util.checkClientType = (req, res, next) => {
  * General Error Handling 
  */
 util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+/**
+ * Delete the image 
+ */
+util.deleteImage = (imagePath) => {
+    fs.unlink("./public" + imagePath, (err) => {
+        if (err) {
+            throw new Error(err);
+        }
+    });
+}
 
 module.exports = util;

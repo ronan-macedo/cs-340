@@ -1,3 +1,5 @@
+/* Account View Styles */
+
 .account-container {
     padding: 1.25rem .625rem;
     margin-bottom: 2rem;
@@ -131,10 +133,19 @@ input:checked+.slider:before {
 }
 
 #passwordValidator {
-    display: none;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .5s ease-in-out;
     border-radius: .25rem;
     margin-top: .75rem;
     margin-bottom: .05rem;
+}
+
+#passwordValidator.visible {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
 }
 
 .invalid:before {

@@ -40,6 +40,7 @@ if (addComment) {
             .then(data => {
                 console.log(data);
                 if (data.errors) {
+                    loaderHandler(false);
                     return buildCommentError(data);
                 }
 
@@ -105,6 +106,7 @@ const editComment = (comment_id) => {
         .then(data => {
             console.log(data);
             if (data.errors) {
+                loaderHandler(false);
                 return buildCommentError(data);
             }
 
@@ -146,6 +148,7 @@ const deleteComment = (comment_id) => {
         .then(data => {
             console.log(data);
             if (data.errors) {
+                loaderHandler(false);
                 return buildCommentError(data);
             }
 
@@ -193,11 +196,11 @@ const buildComments = (data) => {
             if (deleteCondition || editCondition) {
                 commentList += '<div class=user-comment-buttons>';
                 commentList += editCondition ?
-                    `<button id="comment-edit-${comment.comment_id}" onclick="editComment(${comment.comment_id})" disabled>Update</button>`
-                    : "";
+                    `<button id="comment-edit-${comment.comment_id}" onclick="editComment(${comment.comment_id})" disabled>Update</button>` : 
+                    "";
                 commentList += deleteCondition ?
-                    `<button id="comment-delete-${comment.comment_id}" onclick="deleteComment(${comment.comment_id})">Delete</button>`
-                    : "";
+                    `<button id="comment-delete-${comment.comment_id}" onclick="deleteComment(${comment.comment_id})">Delete</button>` : 
+                    "";
                 commentList += '</div>';
             }
             commentList += `<div class="comment-dates">

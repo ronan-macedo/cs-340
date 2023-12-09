@@ -1,1 +1,47 @@
+<div class="gallery-container">
+    <h1><%= inventory.inv_make %> <%= inventory.inv_model %> Gallery</h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error=> { %>
+            <li>
+                <%= error.msg %>
+            </li>
+            <% }) %>
+        </ul>
+    <% } %>
+    <div id="erros"></div>
+    <p class="info"><b>You can only add three images per vehicle.</b></p>
+    <div class="gallery-header">
+        <button type="button" id="addImage" <% if (addDisable) { %> disabled <% } %>>Add Image</button>
+        <div id="formModal" class="form-modal">            
+            <div class="form-content">
+                <span class="close">&times;</span>
+                <h2>Add Image</h2>
+                <p class="info"><b>Please provide an image in the following formats: jpg, png, or gif.</b></p>                                
+                <form id="addImageForm" action="/gallery/images/addImage" method="post" enctype="multipart/form-data">
+                    <p><b>Image</b></p>
+                    <label for="gallery_image" class="custom-upload">                        
+                        <img src="/images/site/upload.png" alt="upload cloud">
+                        <span><b>Choose a file</b></span>
+                    </label>
+                    <input type="file" name="gallery_image" id="gallery_image" accept="image/*" onchange="loadFile(event)">
+                    <div class="image-preview">
+                        <img src="/images/vehicles/no-image.png" id="output" alt="output"><br>
+                    </div>
+                    <input type="hidden" name="inv_id" id="inv_id" value="<%= inventory.inv_id %>">
+                    <input title="Click to add image" type="submit" value="Add">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-body">
+        <div id="galleryItems"></div>
+    </div>
+    <p>
+        <a title="Click to back to inventory management" href="/inv">Back to inventory management</a>
+    </p>
+</div>
 <script src="/js/script.js"></script>
+<script src="/js/image-handler.js"></script>
+<script src="/js/gallery-handler.js"></script>

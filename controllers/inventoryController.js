@@ -1,7 +1,7 @@
 const inventoryModel = require("../models/inventory-model");
+const galleryModel = require("../models/gallery-model");
 const utilities = require("../utilities");
 const sharp = require("sharp");
-const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 // Define inventory scope css
 const inventoryCss = "inv";
@@ -31,9 +31,10 @@ inventoryController.buildInventory = async (req, res) => {
 inventoryController.buildInventoryDetails = async (req, res) => {
     const inv_id = req.params.inv_id;
     const loggedin = res.locals.loggedin;
-    const account = res.locals.accountData ? res.locals.accountData: null;
+    const account = res.locals.accountData ? res.locals.accountData : null;
+    const gallery = await galleryModel.getImages(inv_id);
     const data = await inventoryModel.getInventoryByInvId(inv_id);
-    const details = await utilities.buildVehicleDetails(data, loggedin, account);
+    const details = await utilities.buildVehicleDetails(data, loggedin, account, gallery);
     let nav = await utilities.getNav();
     const title = `${data.inv_make} ${data.inv_model} Details`;
     res.render("./inventory/details", {
@@ -41,19 +42,6 @@ inventoryController.buildInventoryDetails = async (req, res) => {
         nav,
         details,
         pagecss: inventoryCss,
-    });
-}
-
-/**
- * Build build gallery by inv_id view
- */
-inventoryController.buildGallery = async (req, res) => {
-    let nav = await utilities.getNav();
-    res.render("./inventory/gallery", {
-        title: "Gallery",
-        nav,
-        pagecss: inventoryCss,
-        errors: null,
     });
 }
 
@@ -164,7 +152,7 @@ inventoryController.addClassification = async (req, res) => {
                 "success",
                 `New category added ${classification_name}`);
 
-            res.status(201).redirect("/inv/");
+            return res.status(201).redirect("/inv/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, add classification failed.");
@@ -239,7 +227,7 @@ inventoryController.addInventory = async (req, res) => {
                 `New inventory added ${inv_make} ${inv_model}`
             );
 
-            res.status(201).redirect("/inv/");
+            return res.status(201).redirect("/inv/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, add inventory failed.");
@@ -327,7 +315,7 @@ inventoryController.updateInventory = async (req, res) => {
                 `${inv_make} ${inv_model} updated.`
             );
 
-            res.status(200).redirect("/inv/");
+            return res.status(200).redirect("/inv/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, update inventory failed.");
@@ -370,7 +358,7 @@ inventoryController.deleteInventory = async (req, res) => {
                 `${inv_make} ${inv_model} Deleted.`
             );
 
-            res.status(200).redirect("/inv/");
+            return res.status(200).redirect("/inv/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, delete inventory failed.");
@@ -406,26 +394,21 @@ inventoryController.getInventory = async (req, res) => {
     }
 }
 
+/**
+ * Get and delete images from directory
+ */
 const deleteImagesFromDirectory = async (inv_id) => {
     const imagePath = await inventoryModel.getImagesPath(inv_id);
     let inv_image = imagePath.inv_image;
     let inv_thumbnail = imagePath.inv_thumbnail;
 
     if (inv_image != "/images/vehicles/no-image.png") {
-        deleteImage(inv_image);
+        utilities.deleteImage(inv_image);
     }
 
     if (inv_thumbnail != "/images/vehicles/no-image-tn.png") {
-        deleteImage(inv_thumbnail);
+        utilities.deleteImage(inv_thumbnail);
     }
-}
-
-const deleteImage = (imagePath) => {
-    fs.unlink("./public" + imagePath, (err) => {
-        if (err) {
-            throw new Error(err);
-        }
-    });
 }
 
 module.exports = inventoryController;

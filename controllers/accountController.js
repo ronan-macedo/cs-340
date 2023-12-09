@@ -106,7 +106,7 @@ accountController.registerAccount = async (req, res) => {
                 `Congratulations, you're registered ${account_firstname}. Please log in.`
             );
 
-            res.status(201).redirect("/account/");
+            return res.status(201).redirect("/account/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, the registration failed");
@@ -162,7 +162,7 @@ accountController.accountLogin = async (req, res) => {
             delete accountData.account_password;
             const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 });
             res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
-            res.redirect("/account/");
+            return res.redirect("/account/");
         }
     } catch (error) {
         return new Error('Access Forbidden');
@@ -189,7 +189,7 @@ accountController.updateProfile = async (req, res) => {
                 `Congratulations, ${account_firstname}. Your profile was succefully updated.`
             );
 
-            res.status(200).redirect("/account/");
+            return res.status(200).redirect("/account/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, update profile failed");
@@ -248,7 +248,7 @@ accountController.updatePassword = async (req, res) => {
                 `Congratulations, ${result.rows[0].account_firstname}. Your password was succefully updated.`
             );
 
-            res.status(201).redirect("/account/");
+            return res.status(201).redirect("/account/");
         }
     } catch (error) {
         req.flash("notice", "Sorry, update password failed");
