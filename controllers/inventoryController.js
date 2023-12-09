@@ -1,56 +1,60 @@
-const invModel = require("../models/inventory-model");
+const inventoryModel = require("../models/inventory-model");
+const galleryModel = require("../models/gallery-model");
 const utilities = require("../utilities");
+const sharp = require("sharp");
+const { v4: uuidv4 } = require('uuid');
 // Define inventory scope css
-const invcss = "inv";
-
-const invCont = {};
+const inventoryCss = "inv";
+const inventoryController = {};
 
 /**
  * Build inventory view by classification_id
  */
-invCont.buildInventory = async (req, res, next) => {
+inventoryController.buildInventory = async (req, res) => {
     const classification_id = req.params.classificationId;
-    const data = await invModel.getInventoryByClassificationId(classification_id);
+    const data = await inventoryModel.getInventoryByClassificationId(classification_id);
     const grid = await utilities.buildClassificationGrid(data);
     let nav = await utilities.getNav();
-    const className = await invModel.getClassificationName(classification_id);
-    let title = className + " vehicles"
+    const className = await inventoryModel.getClassificationName(classification_id);
+    let title = `${className} vehicles`;
     res.render("./inventory/classification", {
         title: title,
         nav,
         grid,
-        pagecss: invcss,
+        pagecss: inventoryCss,
     });
 }
 
 /**
- * Build vehicle detail by invId view 
+ * Build vehicle detail by inv_id view 
  */
-invCont.buildInventoryDetails = async (req, res, next) => {
-    const inv_id = req.params.invId;
-    const data = await invModel.getInventoryByInvId(inv_id);
-    const details = await utilities.buildVehicleDetails(data);
+inventoryController.buildInventoryDetails = async (req, res) => {
+    const inv_id = req.params.inv_id;
+    const loggedin = res.locals.loggedin;
+    const account = res.locals.accountData ? res.locals.accountData : null;
+    const gallery = await galleryModel.getImages(inv_id);
+    const data = await inventoryModel.getInventoryByInvId(inv_id);
+    const details = await utilities.buildVehicleDetails(data, loggedin, account, gallery);
     let nav = await utilities.getNav();
-    const vehicleName = data.inv_make + ' ' + data.inv_model;
-    let title = vehicleName + " Details"
+    const title = `${data.inv_make} ${data.inv_model} Details`;
     res.render("./inventory/details", {
         title: title,
         nav,
         details,
-        pagecss: invcss,
+        pagecss: inventoryCss,
     });
 }
 
 /**
- * Build vehicle detail by invId view 
+ * Build vehicle detail by inv_id view 
  */
-invCont.buildManagement = async (req, res, next) => {
+inventoryController.buildManagement = async (req, res) => {
     let nav = await utilities.getNav();
     let select = await utilities.buildClassificationList();
     res.render("./inventory/management", {
         title: "Inventory Management",
         nav,
-        pagecss: invcss,
+        pagecss: inventoryCss,
         selectClassification: select,
         errors: null,
     });
@@ -59,12 +63,12 @@ invCont.buildManagement = async (req, res, next) => {
 /**
  * Build add classification view 
  */
-invCont.buildAddClassification = async (req, res, next) => {
+inventoryController.buildAddClassification = async (req, res) => {
     let nav = await utilities.getNav();
     res.render("./inventory/add-classification", {
         title: "Add Classification",
         nav,
-        pagecss: invcss,
+        pagecss: inventoryCss,
         errors: null,
     });
 }
@@ -72,13 +76,13 @@ invCont.buildAddClassification = async (req, res, next) => {
 /**
  * Build add inventory view 
  */
-invCont.buildAddInventory = async (req, res, next) => {
+inventoryController.buildAddInventory = async (req, res) => {
     let nav = await utilities.getNav();
     let select = await utilities.buildSelectClassification(null);
     res.render("./inventory/add-inventory", {
         title: "Add Inventory",
         nav,
-        pagecss: invcss,
+        pagecss: inventoryCss,
         errors: null,
         selectClassification: select
     });
@@ -87,18 +91,17 @@ invCont.buildAddInventory = async (req, res, next) => {
 /**
  * Build add inventory view 
  */
-invCont.buildUpdateInventory = async (req, res, next) => {
-    const inv_id = parseInt(req.params.invId);
+inventoryController.buildUpdateInventory = async (req, res) => {
+    const inv_id = parseInt(req.params.inv_id);
     let nav = await utilities.getNav();
-    const itemData = await invModel.getInventoryByInvId(inv_id);
+    const itemData = await inventoryModel.getInventoryByInvId(inv_id);
     const select = await utilities.buildSelectClassification(itemData.classification_id);
-    const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
-    let title = "Edit " + itemName;
+    const title = `Edit ${itemData.inv_make} ${itemData.inv_model}`;
     res.render("./inventory/update-inventory", {
         title: title,
         nav,
         selectClassification: select,
-        pagecss: invcss,
+        pagecss: inventoryCss,
         errors: null,
         inv_id: itemData.inv_id,
         inv_make: itemData.inv_make,
@@ -106,7 +109,6 @@ invCont.buildUpdateInventory = async (req, res, next) => {
         inv_year: parseInt(itemData.inv_year),
         inv_description: itemData.inv_description,
         inv_image: itemData.inv_image,
-        inv_thumbnail: itemData.inv_thumbnail,
         inv_price: parseFloat(itemData.inv_price),
         inv_miles: parseInt(itemData.inv_miles),
         inv_color: itemData.inv_color,
@@ -116,17 +118,15 @@ invCont.buildUpdateInventory = async (req, res, next) => {
 /**
  * Build add inventory view 
  */
-invCont.buildDeleteInventory = async (req, res, next) => {
-    const inv_id = parseInt(req.params.invId);
+inventoryController.buildDeleteInventory = async (req, res) => {
+    const inv_id = parseInt(req.params.inv_id);
     let nav = await utilities.getNav();
-    const itemData = await invModel.getInventoryByInvId(inv_id);
-    const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
-    let title = "Delete " + itemName;
+    const itemData = await inventoryModel.getInventoryByInvId(inv_id);
+    const title = `Delete ${itemData.inv_make} ${itemData.inv_model}`;
     res.render("./inventory/delete-inventory", {
         title: title,
         nav,
-        selectClassification: select,
-        pagecss: invcss,
+        pagecss: inventoryCss,
         errors: null,
         inv_id: itemData.inv_id,
         inv_make: itemData.inv_make,
@@ -140,12 +140,12 @@ invCont.buildDeleteInventory = async (req, res, next) => {
 /**
  * Add new classification
  */
-invCont.addClassification = async (req, res, next) => {
+inventoryController.addClassification = async (req, res) => {
     let nav = await utilities.getNav();
     const { classification_name } = req.body;
 
     try {
-        const result = await invModel.addClassification(classification_name);
+        const result = await inventoryModel.addClassification(classification_name);
 
         if (result) {
             req.flash(
@@ -153,41 +153,63 @@ invCont.addClassification = async (req, res, next) => {
                 `New category added ${classification_name}`);
 
             return res.status(201).redirect("/inv/");
-            next();
         }
     } catch (error) {
         req.flash("notice", "Sorry, add classification failed.");
         res.status(501).render("./inventory/add-classification", {
             title: "Add Classification",
             nav,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             errors: null,
             classification_name,
         });
-        return;
     }
 }
 
 /**
  * Add new inventory
  */
-invCont.addInventory = async (req, res) => {
-    let nav = await utilities.getNav();    
+inventoryController.addInventory = async (req, res) => {
+    let nav = await utilities.getNav();
 
     const {
         inv_make,
         inv_model,
         inv_year,
         inv_description,
-        inv_image,
-        inv_thumbnail,
         inv_price,
         inv_miles,
         inv_color,
         classification_id } = req.body;
 
     try {
-        const result = await invModel.addInventory(
+        let inv_image = "/images/vehicles/no-image.png"
+        let inv_thumbnail = "/images/vehicles/no-image-tn.png";
+
+        if (req.files) {
+            let fileExtension = req.files.inv_image.name.split('.').pop();
+            const validExtensions = ["jpg", "png", "gif"];
+
+            if (!validExtensions.includes(fileExtension)) {
+                throw new Error("Please provide images in jpg, png, or gif format.");
+            }
+
+            const image = req.files.inv_image;
+            const imageIdentifier = uuidv4();
+            inv_image = `/images/vehicles/${imageIdentifier}.png`;
+            inv_thumbnail = `/images/vehicles/${imageIdentifier}-tn.png`;
+
+            await sharp(image.data)
+                .resize({ width: 500, height: 320 })
+                .toFormat("png")
+                .toFile("./public" + inv_image);
+            await sharp(image.data)
+                .resize({ width: 200, height: 150 })
+                .toFormat("png")
+                .toFile("./public" + inv_thumbnail);
+        }
+
+        const result = await inventoryModel.addInventory(
             inv_make,
             inv_model,
             inv_year,
@@ -206,7 +228,6 @@ invCont.addInventory = async (req, res) => {
             );
 
             return res.status(201).redirect("/inv/");
-            next();
         }
     } catch (error) {
         req.flash("notice", "Sorry, add inventory failed.");
@@ -214,27 +235,24 @@ invCont.addInventory = async (req, res) => {
         res.status(501).render("./inventory/add-inventory", {
             title: "Add Inventory",
             nav,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             errors: null,
             selectClassification: select,
             inv_make,
             inv_model,
             inv_year,
             inv_description,
-            inv_image,
-            inv_thumbnail,
             inv_price,
             inv_miles,
             inv_color,
         });
-        return;
     }
 }
 
 /**
  * Update inventory
  */
-invCont.updateInventory = async (req, res) => {
+inventoryController.updateInventory = async (req, res) => {
     let nav = await utilities.getNav();
 
     const {
@@ -242,8 +260,6 @@ invCont.updateInventory = async (req, res) => {
         inv_model,
         inv_year,
         inv_description,
-        inv_image,
-        inv_thumbnail,
         inv_price,
         inv_miles,
         inv_color,
@@ -251,7 +267,36 @@ invCont.updateInventory = async (req, res) => {
         inv_id } = req.body;
 
     try {
-        const result = await invModel.updateInventory(
+        const imagePath = await inventoryModel.getImagesPath(inv_id);
+        let inv_image = imagePath.inv_image;
+        let inv_thumbnail = imagePath.inv_thumbnail;
+
+        if (req.files) {
+            let fileExtension = req.files.inv_image.name.split('.').pop();
+            const validExtensions = ["jpg", "png", "gif"];
+
+            if (!validExtensions.includes(fileExtension)) {
+                throw new Error("Please provide images in jpg, png, or gif format.");
+            }
+
+            await deleteImagesFromDirectory(inv_id);
+
+            const image = req.files.inv_image;
+            const imageIdentifier = uuidv4();
+            inv_image = `/images/vehicles/${imageIdentifier}.png`;
+            inv_thumbnail = `/images/vehicles/${imageIdentifier}-tn.png`;
+
+            await sharp(image.data)
+                .resize({ width: 500, height: 320 })
+                .toFormat("png")
+                .toFile("./public" + inv_image);
+            await sharp(image.data)
+                .resize({ width: 200, height: 150 })
+                .toFormat("png")
+                .toFile("./public" + inv_thumbnail);
+        }
+
+        const result = await inventoryModel.updateInventory(
             inv_make,
             inv_model,
             inv_year,
@@ -271,18 +316,16 @@ invCont.updateInventory = async (req, res) => {
             );
 
             return res.status(200).redirect("/inv/");
-            next();
         }
     } catch (error) {
         req.flash("notice", "Sorry, update inventory failed.");
         const select = await utilities.buildSelectClassification(classification_id);
-        const itemName = `${inv_make} ${inv_model}`;
-        let title = "Edit " + itemName;
+        const title = `Edit ${inv_make} ${inv_model}`;
         res.status(500).render("./inventory/update-inventory", {
             title: title,
             nav,
             selectClassification: select,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             errors: null,
             inv_id: inv_id,
             inv_make: inv_make,
@@ -295,20 +338,19 @@ invCont.updateInventory = async (req, res) => {
             inv_miles: parseInt(inv_miles),
             inv_color: inv_color,
         });
-        return;
     }
 }
 
 /**
  * Delete inventory
  */
-invCont.deleteInventory = async (req, res) => {
-    let nav = await utilities.getNav();
-
+inventoryController.deleteInventory = async (req, res) => {
     const { inv_make, inv_model, inv_id } = req.body;
 
     try {
-        const result = await invModel.deleteInventory(inv_id);
+        await deleteImagesFromDirectory(inv_id);
+
+        const result = await inventoryModel.deleteInventory(parseInt(inv_id));
 
         if (result) {
             req.flash(
@@ -317,16 +359,16 @@ invCont.deleteInventory = async (req, res) => {
             );
 
             return res.status(200).redirect("/inv/");
-            next();
         }
     } catch (error) {
         req.flash("notice", "Sorry, delete inventory failed.");
         const itemName = `${inv_make} ${inv_model}`;
+        const itemData = await inventoryModel.getInventoryByInvId(inv_id);
         let title = "Delete " + itemName;
         res.status(500).render("./inventory/delete-inventory", {
             title: title,
             nav,
-            pagecss: invcss,
+            pagecss: inventoryCss,
             errors: null,
             inv_id: itemData.inv_id,
             nv_make: itemData.inv_make,
@@ -335,22 +377,38 @@ invCont.deleteInventory = async (req, res) => {
             inv_price: parseFloat(itemData.inv_price),
             inv_miles: parseInt(itemData.inv_miles),
         });
-        return;
     }
 }
 
 /**
  * Return Inventory by Classification As JSON 
  */
-invCont.getInventory = async (req, res, next) => {
+inventoryController.getInventory = async (req, res) => {
     const classification_id = parseInt(req.params.classification_id);
-    const invData = await invModel.getInventoryByClassificationId(classification_id);
+    const invData = await inventoryModel.getInventoryByClassificationId(classification_id);
 
     if (invData.length > 0) {
-        return res.json(invData);
+        return res.status(200).json(invData);
     } else {
         return res.status(404).json();
     }
 }
 
-module.exports = invCont;
+/**
+ * Get and delete images from directory
+ */
+const deleteImagesFromDirectory = async (inv_id) => {
+    const imagePath = await inventoryModel.getImagesPath(inv_id);
+    let inv_image = imagePath.inv_image;
+    let inv_thumbnail = imagePath.inv_thumbnail;
+
+    if (inv_image != "/images/vehicles/no-image.png") {
+        utilities.deleteImage(inv_image);
+    }
+
+    if (inv_thumbnail != "/images/vehicles/no-image-tn.png") {
+        utilities.deleteImage(inv_thumbnail);
+    }
+}
+
+module.exports = inventoryController;

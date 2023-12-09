@@ -2,6 +2,7 @@
  * Required Statements
  */
 const session = require("express-session");
+const fileUpload = require('express-fileupload');
 const pool = require('./database/');
 const express = require("express");
 const env = require("dotenv");
@@ -14,6 +15,8 @@ const cookieParser = require("cookie-parser");
 /**
  * Middleware
  */
+app.use(fileUpload());
+
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -61,6 +64,12 @@ app.use("/inv", require("./routes/inventoryRoute"));
 // Account Routes
 app.use("/account", require("./routes/accountRoute"));
 
+// Comment Routes
+app.use("/comment", require("./routes/commentRoute"));
+
+// Gallery Routes
+app.use("/gallery", require("./routes/galleryRoute"));
+
 // Not Found Route
 app.use(async (req, res, next) => {
   next({ status: 404, message: 'Sorry, we appear to have lost that page.' });
@@ -73,12 +82,9 @@ app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   let message = err.status == 404 ? err.message : 'Oh no! There was a crash. Maybe try a different route?';
-  req.flash(
-    "notice",
-    message
-);
+  req.flash("notice", message);
   res.render("errors/error", {
-    title: err.status || 'Server Error',    
+    title: err.status || 'Server Error',
     pagecss: null,
     nav
   });

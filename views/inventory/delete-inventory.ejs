@@ -14,25 +14,25 @@
         <p class="notice">Delete action cannot be undo</p>
         <form id="updateInventory" action="/inv/delete-inventory" method="post">
             <label for="inv_make"><b>Manufacturer</b></label><br>
-            <input type="text" name="inv_make" id="inv_make" placeholder="Enter manufacturer here" pattern=".{2,}"
+            <input type="text" name="inv_make" id="inv_make"
                 <% if (inv_make) { %>
                     value="<%= inv_make %>"
                 <% } %>
                 required readonly><br>
             <label for="inv_model"><b>Model</b></label><br>
-            <input type="text" name="inv_model" id="inv_model" placeholder="Enter model here" pattern=".{2,}"
+            <input type="text" name="inv_model" id="inv_model"
                 <% if (inv_model) { %>
                     value="<%= inv_model %>"
                 <% } %>
                 required readonly><br>
             <label for="inv_year"><b>Year</b></label><br>
-            <input type="number" name="inv_year" id="inv_year" placeholder="Enter year here"
+            <input type="number" name="inv_year" id="inv_year"
                 <% if (inv_year) { %>
                     value="<%= inv_year %>"
                 <% } %>
                 required readonly><br>
             <label for="inv_price"><b>Price</b></label><br>
-            <input type="number" name="inv_price" id="inv_price" placeholder="Enter price here" step="0.01" min="0"
+            <input type="number" name="inv_price" id="inv_price" step="0.01" min="0"
                 <% if (inv_price) { %>
                     value="<%= inv_price %>"
                 <% } %>
@@ -45,3 +45,4 @@
         <a title="Click to back to inventory management" href="/inv">Back to inventory management</a>
     </p>
 </div>
+<script src="/js/script.js"></script>

@@ -1,7 +1,7 @@
 const utilities = require(".");
 const { body, validationResult } = require("express-validator");
 const accountModel = require("../models/account-model");
-const accountcss = "account";
+const accountCss = "account";
 const validate = {};
 
 /**
@@ -136,7 +136,7 @@ validate.checkRegData = async (req, res, next) => {
             errors,
             title: "Registration",
             nav,
-            pagecss: accountcss,
+            pagecss: accountCss,
             account_firstname,
             account_lastname,
             account_email,
@@ -159,7 +159,7 @@ validate.checkLoginData = async (req, res, next) => {
             errors,
             title: "Login",
             nav,
-            pagecss: accountcss,
+            pagecss: accountCss,
             account_email,
         });
         return;
@@ -180,7 +180,7 @@ validate.checkUpdatePasswordData = async (req, res, next) => {
         res.status(400).render("./account/account-update", {
             title: "Account Update",
             nav,
-            pagecss: accountcss,
+            pagecss: accountCss,
             errors: errors,
             account_firstname: accountData.account_firstname,
             account_lastname: accountData.account_lastname,
@@ -204,7 +204,7 @@ validate.checkUpdateProfileData = async (req, res, next) => {
         res.render("./account/account-update", {
             title: "Account Update",
             nav,
-            pagecss: accountcss,
+            pagecss: accountCss,
             errors: errors,
             account_firstname: account_firstname,
             account_lastname: account_lastname,
