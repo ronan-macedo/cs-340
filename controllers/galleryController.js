@@ -5,6 +5,7 @@ const sharp = require("sharp");
 const { v4: uuidv4 } = require('uuid');
 const galleryCss = "gallery";
 
+const imagesLimit = 3;
 const galleryController = {};
 
 /**
@@ -12,7 +13,7 @@ const galleryController = {};
  */
 galleryController.buildGalleryManagement = async (req, res) => {
     const inv_id = req.params.inv_id;
-    const addDisable = await galleryModel.countImages(inv_id) >= 3;
+    const addDisable = await galleryModel.countImages(inv_id) >= imagesLimit;
     const inventory = await inventoryModel.getInventoryByInvId(inv_id);
     let title = `${inventory.inv_make} ${inventory.inv_model} Gallery`;
     let nav = await utilities.getNav();
@@ -41,6 +42,19 @@ galleryController.addImage = async (req, res) => {
     const { inv_id } = req.body;
 
     try {
+        const addDisable = await galleryModel.countImages(inv_id) >= imagesLimit;
+        
+        if(addDisable) {
+            req.flash(
+                "notice",
+                "You cannot add more than three images."
+            );
+
+            res.status(400).redirect(`/gallery/${inv_id}`);
+            return;
+        }
+
+
         if (!req.files) {
             req.flash(
                 "notice",
