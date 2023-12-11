@@ -79,7 +79,7 @@ galleryController.addImage = async (req, res) => {
 
         const image = req.files.gallery_image;
         const imageIdentifier = uuidv4();
-        gallery_image = `/images/gallery/${imageIdentifier}.png`;
+        let gallery_image = `/images/gallery/${imageIdentifier}.png`;
 
         const result = await galleryModel.addImage(gallery_image, inv_id);
 
