@@ -386,10 +386,12 @@
 }
 
 .gallery-row {
-    bottom: 0;
-    display: grid;
-    grid-template-columns: auto auto auto auto;
     max-width: 100%
+}
+
+.column {
+    float: left;
+    width: 25%;
 }
 
 .gallery-row:after {
