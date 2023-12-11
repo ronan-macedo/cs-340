@@ -348,7 +348,8 @@ inventoryController.deleteInventory = async (req, res) => {
     const { inv_make, inv_model, inv_id } = req.body;
 
     try {
-        await deleteImagesFromDirectory(inv_id);
+        const galleryImages = await galleryModel.getImages(inv_id);
+        await deleteImagesFromDirectory(inv_id, galleryImages);
 
         const result = await inventoryModel.deleteInventory(parseInt(inv_id));
 
@@ -397,7 +398,7 @@ inventoryController.getInventory = async (req, res) => {
 /**
  * Get and delete images from directory
  */
-const deleteImagesFromDirectory = async (inv_id) => {
+const deleteImagesFromDirectory = async (inv_id, galleryImages) => {
     const imagePath = await inventoryModel.getImagesPath(inv_id);
     let inv_image = imagePath.inv_image;
     let inv_thumbnail = imagePath.inv_thumbnail;
@@ -408,6 +409,12 @@ const deleteImagesFromDirectory = async (inv_id) => {
 
     if (inv_thumbnail != "/images/vehicles/no-image-tn.png") {
         utilities.deleteImage(inv_thumbnail);
+    }
+
+    if (galleryImages.length > 0) {
+        galleryImages.forEach(image => {
+            utilities.deleteImage(image.gallery_image);
+        });
     }
 }
 
