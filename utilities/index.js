@@ -84,7 +84,7 @@ util.buildVehicleDetails = async (data, loggedin, account, gallery) => {
                         <img src="${image.gallery_image}" alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors">
                     </div>`;
             });
-            slideCounter = 1;            
+            slideCounter = 1;
             details += `<span class="prev cursor" onclick="plusSlides(-1)">&#8249;</span>
                 <span class="next cursor" onclick="plusSlides(1)">&#8250;</span>`;
             details += `<div class="gallery-row">
@@ -248,12 +248,14 @@ util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
  * Delete the image 
  */
 util.deleteImage = (imagePath) => {
-    let path = "./public" + imagePath;
-    fs.unlink(path, (err) => {
-        if (err) {
-            throw new Error(err);
-        }
-    });
+    if (imagePath) {
+        let path = "./public" + imagePath;
+        fs.unlink(path, (err) => {
+            if (err) {
+                throw new Error(err);
+            }
+        });
+    }
 }
 
 module.exports = util;
