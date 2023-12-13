@@ -64,7 +64,7 @@ inventoryModel.getImagesPath = async (inv_id) => {
             FROM public.inventory
             WHERE inv_id = $1`;
         const data = await pool.query(sql, [inv_id]);
-        return data.rows[0];
+        return data.rows;
     } catch (error) {
         throw new Error(`getImagesPath error ${error}`);
     }
