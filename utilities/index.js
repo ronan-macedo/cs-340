@@ -248,7 +248,8 @@ util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
  * Delete the image 
  */
 util.deleteImage = (imagePath) => {
-    fs.unlink("./public" + imagePath, (err) => {
+    let path = "./public" + imagePath;
+    fs.unlink(path, (err) => {
         if (err) {
             throw new Error(err);
         }

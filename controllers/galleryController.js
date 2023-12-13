@@ -80,14 +80,18 @@ galleryController.addImage = async (req, res) => {
         const image = req.files.gallery_image;
         const imageIdentifier = uuidv4();
         let gallery_image = `/images/gallery/${imageIdentifier}.png`;
+        let imagePath = "./public" + gallery_image;
 
         const result = await galleryModel.addImage(gallery_image, inv_id);
 
         if (result) {
-            await sharp(image.data)
-                .resize({ width: 500, height: 320 })
-                .toFormat("png")
-                .toFile("./public" + gallery_image);
+            sharp(image.data)
+                .resize({ width: 500, height: 320 })                
+                .toFile(imagePath, (err, info) => {
+                    if (err) {
+                        console.error("Error" + err);
+                    }
+                });
 
             res.status(201).redirect(`/gallery/${inv_id}`);
         } else {
