@@ -3,6 +3,7 @@ const galleryModel = require("../models/gallery-model");
 const utilities = require("../utilities");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 // Define inventory scope css
 const inventoryCss = "inv";
 const inventoryController = {};
@@ -198,15 +199,24 @@ inventoryController.addInventory = async (req, res) => {
             const imageIdentifier = uuidv4();
             inv_image = `/images/vehicles/${imageIdentifier}.png`;
             inv_thumbnail = `/images/vehicles/${imageIdentifier}-tn.png`;
+            let imagePath = "./public" + inv_image;
+            let thumbnailPath = "./public" + inv_thumbnail;
 
-            await sharp(image.data)
+            sharp(image.data)
                 .resize({ width: 500, height: 320 })
-                .toFormat("png")
-                .toFile("./public" + inv_image);
-            await sharp(image.data)
+                .toFile(imagePath, (err, info) => {
+                    if (err) {
+                        console.error("Error" + err);
+                    }
+                });
+
+            sharp(image.data)
                 .resize({ width: 200, height: 150 })
-                .toFormat("png")
-                .toFile("./public" + inv_thumbnail);
+                .toFile(thumbnailPath, (err, info) => {
+                    if (err) {
+                        console.error("Error" + err);
+                    }
+                });
         }
 
         const result = await inventoryModel.addInventory(
@@ -279,21 +289,30 @@ inventoryController.updateInventory = async (req, res) => {
                 throw new Error("Please provide images in jpg, png, or gif format.");
             }
 
-            await deleteImagesFromDirectory(inv_id);
+            await deleteImagesFromDirectory(inv_id, []);
 
             const image = req.files.inv_image;
             const imageIdentifier = uuidv4();
             inv_image = `/images/vehicles/${imageIdentifier}.png`;
             inv_thumbnail = `/images/vehicles/${imageIdentifier}-tn.png`;
+            let imagePath = "./public" + inv_image;
+            let thumbnailPath = "./public" + inv_thumbnail;
 
-            await sharp(image.data)
+            sharp(image.data)
                 .resize({ width: 500, height: 320 })
-                .toFormat("png")
-                .toFile("./public" + inv_image);
-            await sharp(image.data)
+                .toFile(imagePath, (err, info) => {
+                    if (err) {
+                        console.error("Error" + err);
+                    }
+                });
+
+            sharp(image.data)
                 .resize({ width: 200, height: 150 })
-                .toFormat("png")
-                .toFile("./public" + inv_thumbnail);
+                .toFile(thumbnailPath, (err, info) => {
+                    if (err) {
+                        console.error("Error" + err);
+                    }
+                });
         }
 
         const result = await inventoryModel.updateInventory(
@@ -320,6 +339,7 @@ inventoryController.updateInventory = async (req, res) => {
     } catch (error) {
         req.flash("notice", "Sorry, update inventory failed.");
         const select = await utilities.buildSelectClassification(classification_id);
+        const imagePath = await inventoryModel.getImagesPath(inv_id);
         const title = `Edit ${inv_make} ${inv_model}`;
         res.status(500).render("./inventory/update-inventory", {
             title: title,
@@ -332,7 +352,7 @@ inventoryController.updateInventory = async (req, res) => {
             inv_model: inv_model,
             inv_year: parseInt(inv_year),
             inv_description: inv_description,
-            inv_image: inv_image,
+            inv_image: imagePath.inv_image,
             inv_thumbnail: inv_thumbnail,
             inv_price: parseFloat(inv_price),
             inv_miles: parseInt(inv_miles),
